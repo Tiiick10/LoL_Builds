@@ -66,6 +66,8 @@ class Build(models.Model):
     def __str__(self):
         return self.name
     
+    is_public = models.BooleanField(default=True)
+    
 class AvisBuild(models.Model):
     build = models.ForeignKey('Build', on_delete=models.CASCADE, related_name='avis')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
