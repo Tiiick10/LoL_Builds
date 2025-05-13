@@ -40,6 +40,37 @@ def register_user(request):
     user = User.objects.create_user(username=username, email=email, password=password)
     return Response({'message': 'User created successfully'}, status=201)
 
+# Avis delete by index inside a build
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_avis_by_index(request, build_id, avis_index):
+    try:
+        build = Build.objects.get(pk=build_id)
+    except Build.DoesNotExist:
+        return Response({"error": "Build not found"}, status=404)
+
+    avis_list = list(build.avis.all())
+    if avis_index < 0 or avis_index >= len(avis_list):
+        return Response({"error": "Avis index out of range"}, status=400)
+
+    avis_to_delete = avis_list[avis_index]
+    avis_to_delete.delete()
+    return Response({"message": f"Avis #{avis_index + 1} deleted from build {build.name}."})
+
+# 5 last public builds (HomePage)
+@api_view(['GET'])
+def latest_public_builds(request):
+    builds = Build.objects.filter(is_public=True).order_by('-created_at')[:5]
+    serializer = BuildSerializer(builds, many=True)
+    return Response(serializer.data)
+
+# 5 last articles despite the role 
+@api_view(['GET'])
+def latest_articles(request):
+    articles = Article.objects.order_by('-date_creation')[:5]
+    serializer = ArticleSerializer(articles, many=True)
+    return Response(serializer.data)
+
 # Champion list
 class ChampionListView(generics.ListAPIView):
     queryset = Champion.objects.all()
@@ -75,22 +106,6 @@ class AvisBuildCreateView(generics.CreateAPIView):
     serializer_class = AvisBuildSerializer
     permission_classes = [IsAuthenticated, IsUtilisateur]
 
-# Avis delete by index inside a build
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_avis_by_index(request, build_id, avis_index):
-    try:
-        build = Build.objects.get(pk=build_id)
-    except Build.DoesNotExist:
-        return Response({"error": "Build not found"}, status=404)
-
-    avis_list = list(build.avis.all())
-    if avis_index < 0 or avis_index >= len(avis_list):
-        return Response({"error": "Avis index out of range"}, status=400)
-
-    avis_to_delete = avis_list[avis_index]
-    avis_to_delete.delete()
-    return Response({"message": f"Avis #{avis_index + 1} deleted from build {build.name}."})
 
 # Article create & list (Redacteur only)
 class ArticleListCreateView(generics.ListCreateAPIView):
