@@ -1,14 +1,19 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework import generics, status, filters
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth.models import User
 from .models import Champion, Build, AvisBuild, Article
 from .serializers import ChampionSerializer, BuildSerializer, AvisBuildSerializer, ArticleSerializer
+from .permissions import IsRedacteur, IsUtilisateur, IsOwnerOrReadOnly
 
 # Create your views here.
 
+# Toggle visibility of a build
 @api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
 def toggle_build_visibility(request, pk):
     try:
         build = Build.objects.get(pk=pk)
@@ -19,18 +24,40 @@ def toggle_build_visibility(request, pk):
     build.save()
     return Response({"id": build.id, "is_public": build.is_public}, status=200)
 
+# User registration
+@api_view(['POST'])
+def register_user(request):
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if not username or not email or not password:
+        return Response({'error': 'All fields are required'}, status=400)
+
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists'}, status=400)
+
+    user = User.objects.create_user(username=username, email=email, password=password)
+    return Response({'message': 'User created successfully'}, status=201)
+
+# Champion list
 class ChampionListView(generics.ListAPIView):
     queryset = Champion.objects.all()
     serializer_class = ChampionSerializer
 
+# Build create & list (restricted to Utilisateur or Redacteur)
 class BuildListCreateView(generics.ListCreateAPIView):
     queryset = Build.objects.all()
     serializer_class = BuildSerializer
+    permission_classes = [IsAuthenticated, IsUtilisateur]
 
+# Build delete (only if user is author)
 class BuildDeleteView(generics.DestroyAPIView):
     queryset = Build.objects.all()
     serializer_class = BuildSerializer
+    permission_classes = [IsAuthenticated, IsUtilisateur, IsOwnerOrReadOnly]
 
+# Build list (public only, with pagination and filters)
 class BuildPagination(PageNumberPagination):
     page_size = 25
 
@@ -42,28 +69,48 @@ class BuildListFilteredView(generics.ListAPIView):
     ordering_fields = ['created_at']
     pagination_class = BuildPagination
 
+# Avis (comment) create (Utilisateur or Redacteur)
 class AvisBuildCreateView(generics.CreateAPIView):
     queryset = AvisBuild.objects.all()
     serializer_class = AvisBuildSerializer
+    permission_classes = [IsAuthenticated, IsUtilisateur]
 
+# Avis delete by index inside a build
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_avis_by_index(request, build_id, avis_index):
+    try:
+        build = Build.objects.get(pk=build_id)
+    except Build.DoesNotExist:
+        return Response({"error": "Build not found"}, status=404)
 
+    avis_list = list(build.avis.all())
+    if avis_index < 0 or avis_index >= len(avis_list):
+        return Response({"error": "Avis index out of range"}, status=400)
+
+    avis_to_delete = avis_list[avis_index]
+    avis_to_delete.delete()
+    return Response({"message": f"Avis #{avis_index + 1} deleted from build {build.name}."})
+
+# Article create & list (Redacteur only)
 class ArticleListCreateView(generics.ListCreateAPIView):
     queryset = Article.objects.all().order_by('-date_creation')
     serializer_class = ArticleSerializer
+    permission_classes = [IsAuthenticated, IsRedacteur]
 
-
+# Article detail view
 class ArticleDetailView(generics.RetrieveAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
+# Article update (Redacteur only)
 class ArticleUpdateView(generics.UpdateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+    permission_classes = [IsAuthenticated, IsRedacteur]
 
+# Article delete (Redacteur only)
 class ArticleDeleteView(generics.DestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
-
-class AvisBuildDeleteView(generics.DestroyAPIView):
-    queryset = AvisBuild.objects.all()
-    serializer_class = AvisBuildSerializer
+    permission_classes = [IsAuthenticated, IsRedacteur]
