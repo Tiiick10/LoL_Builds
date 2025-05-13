@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fullstack_project_CANGE_FABIAN_
 django.setup()
 
 from django.contrib.auth.models import User, Group
-from build_LoL.models import Champion, Build, Article
+from build_LoL.models import Champion, Build, Article, AvisBuild
 
 # Delete all existing data
 Build.objects.all().delete()
@@ -136,4 +136,24 @@ for i in range(10):
     )
 
 print("10 articles generated ")
+
+# AvisBuild
+for build in Build.objects.all():
+    for _ in range(random.randint(1, 5)):
+        AvisBuild.objects.create(
+            build=build,
+            author=random.choice(users),
+            positif=random.choice([True, False]),
+            commentaire=random.choice([
+                "Very effective build!",
+                "I tried it and it worked perfectly.",
+                "Not really my style, but interesting.",
+                "Didn't like it at all...",
+                "Solid choice for ranked.",
+                ""
+            ]),
+        )
+
+print("Comments for builds generated")
+
 print("Users, builds and articles created successfully.")
