@@ -132,3 +132,9 @@ CORS_ALLOWED_ORIGINS = [
 
 # Dev UNIQUEMENT
 CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+
+# REST_FRAMEWORK
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
