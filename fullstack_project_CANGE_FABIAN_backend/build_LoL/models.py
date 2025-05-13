@@ -67,6 +67,59 @@ class Build(models.Model):
         return self.name
     
     is_public = models.BooleanField(default=True)
+
+    def get_rune_icon_url(self, rune_name):
+        from build_LoL.models import Rune
+        try:
+            rune = Rune.objects.get(name__iexact=rune_name)
+            return rune.icon_url()
+        except Rune.DoesNotExist:
+            return None
+
+    def keystone_icon_url(self):
+        return self.get_rune_icon_url(self.keystone)
+
+    def primary_slot1_icon_url(self):
+        return self.get_rune_icon_url(self.primary_slot1)
+
+    def primary_slot2_icon_url(self):
+        return self.get_rune_icon_url(self.primary_slot2)
+
+    def primary_slot3_icon_url(self):
+        return self.get_rune_icon_url(self.primary_slot3)
+
+    def secondary_slot1_icon_url(self):
+        return self.get_rune_icon_url(self.secondary_slot1)
+
+    def secondary_slot2_icon_url(self):
+        return self.get_rune_icon_url(self.secondary_slot2)
+
+    def primary_path_icon_url(self):
+        return self.get_rune_icon_url(self.primary_path)
+
+    def secondary_path_icon_url(self):
+        return self.get_rune_icon_url(self.secondary_path)
+    
+    def shard_offense_icon_url(self):
+        return self.get_rune_icon_url(self.shard_offense)
+    
+    def shard_flex_icon_url(self):
+        return self.get_rune_icon_url(self.shard_flex)
+    
+    def shard_defense_icon_url(self):
+        return self.get_rune_icon_url(self.shard_defense)
+
+class Rune(models.Model):
+    riot_id = models.IntegerField(unique=True)
+    name = models.CharField(max_length=100)
+    icon_path = models.CharField(max_length=255)
+
+    def icon_url(self):
+        return f"https://ddragon.canisback.com/img/{self.icon_path}"
+
+    def __str__(self):
+        return self.name
+
     
 class AvisBuild(models.Model):
     build = models.ForeignKey('Build', on_delete=models.CASCADE, related_name='avis')

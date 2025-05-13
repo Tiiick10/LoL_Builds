@@ -101,7 +101,7 @@ for i in range(10):
 
     build = Build.objects.create(
         name=f"Build {champ.name} {i+1}",
-        description=f"<p>Optimised for {role} with {champ.name}. Perfect synergy with {keystone}.</p>",
+        description=f"Optimised for {role} with {champ.name}. Perfect synergy with {keystone}.",
         author=auteur,
         role=role,
         champion=champ,
