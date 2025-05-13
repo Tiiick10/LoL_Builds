@@ -1,15 +1,17 @@
 import { BsHandThumbsUp, BsHandThumbsDown } from "react-icons/bs"
 
 export default function BuildsCard({ build }) {
-  
   const imageUrl = build?.champion?.image_url || "https://via.placeholder.com/64x64?text=?"
 
-  return (
+  const shards = ["shard_offense", "shard_flex", "shard_defense"].map(key => ({
+    icon: build[`${key}_icon_url`],
+    name: build[key],
+  }))
 
+  return (
     <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all">
 
       {/* Header section */}
-
       <div className="flex items-center space-x-4">
         <img
           src={imageUrl}
@@ -19,7 +21,7 @@ export default function BuildsCard({ build }) {
         <div className="flex-1">
           <h3 className="text-white text-2xl font-bold">{build.name}</h3>
           <p className="text-gray-400 text-sm capitalize">{build.role}</p>
-          <p className="text-gray-300 text-xs mt-1">Author: {build.author?.name || "Unknown"}</p>
+          <p className="text-gray-300 text-xs mt-1">Author: {build.author || "Unknown"}</p>
           <p className="text-xs text-gray-400 flex gap-2 items-center">
             <BsHandThumbsUp /> {build.avis_positif} / <BsHandThumbsDown /> {build.avis_negatif}
           </p>
@@ -35,7 +37,6 @@ export default function BuildsCard({ build }) {
       </div>
 
       {/* Primary Runes */}
-
       <div className="mt-4">
         <h4 className="text-white font-semibold mb-2">Primary Runes</h4>
         <div className="flex gap-4">
@@ -57,7 +58,6 @@ export default function BuildsCard({ build }) {
       </div>
 
       {/* Secondary Runes */}
-
       <div className="mt-4">
         <h4 className="text-white font-semibold mb-2">Secondary Runes</h4>
         <div className="flex gap-4">
@@ -78,8 +78,24 @@ export default function BuildsCard({ build }) {
         </div>
       </div>
 
-      {/* Description */}
+      {/* Shards */}
+      <div className="mt-4">
+        <h4 className="text-white font-semibold mb-2">Shards</h4>
+        <div className="flex gap-4">
+          {shards.map((shard, i) =>
+            shard.icon ? (
+              <img
+                key={i}
+                src={shard.icon}
+                alt={shard.name}
+                className="w-6 h-6 object-contain"
+              />
+            ) : null
+          )}
+        </div>
+      </div>
 
+      {/* Description */}
       <div className="mt-4">
         <h4 className="text-white font-semibold mb-2">Description</h4>
         <p className="text-gray-400 text-sm">{build.description}</p>
