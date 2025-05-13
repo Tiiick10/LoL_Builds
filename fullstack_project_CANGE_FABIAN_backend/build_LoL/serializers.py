@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Champion, Build, AvisBuild, Article
+from .models import Champion, Build, AvisBuild, Article, AvisBuild
 
 class ChampionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,4 +22,9 @@ class AvisBuildSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
+        fields = '__all__'
+
+class AvisBuildSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AvisBuild
         fields = '__all__'

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 
@@ -94,3 +95,14 @@ class Article(models.Model):
 
     def __str__(self):
         return self.titre
+
+class AvisBuild(models.Model):
+    build = models.ForeignKey(Build, on_delete=models.CASCADE, related_name='avis')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    positif = models.BooleanField()
+    commentaire = models.TextField(blank=True)
+    date_poste = models.DateTimeField(default=timezone.now)
+    banned = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Avis by {self.author.username} on {self.build.name}"
