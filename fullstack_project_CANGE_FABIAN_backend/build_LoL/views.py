@@ -2,11 +2,11 @@ from rest_framework import generics, status, filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User
 from .models import Champion, Build, AvisBuild, Article
-from .serializers import ChampionSerializer, BuildSerializer, AvisBuildSerializer, ArticleSerializer
+from .serializers import ChampionSerializer, BuildSerializer, AvisBuildSerializer, ArticleSerializer, BuildListSerializer
 from .permissions import IsRedacteur, IsUtilisateur, IsOwnerOrReadOnly
 
 # Create your views here.
@@ -92,6 +92,11 @@ class BuildDeleteView(generics.DestroyAPIView):
 class BuildPagination(PageNumberPagination):
     page_size = 25
 
+class BuildListPublicView(generics.ListAPIView):
+    queryset = Build.objects.filter(is_public=True)
+    serializer_class = BuildListSerializer
+    permission_classes = [AllowAny]
+
 class BuildListFilteredView(generics.ListAPIView):
     queryset = Build.objects.filter(is_public=True)
     serializer_class = BuildSerializer
@@ -129,3 +134,8 @@ class ArticleDeleteView(generics.DestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = [IsAuthenticated, IsRedacteur]
+
+class PublicArticleListView(generics.ListAPIView):
+    queryset = Article.objects.all().order_by('-date_creation')
+    serializer_class = ArticleSerializer
+    permission_classes = [AllowAny]

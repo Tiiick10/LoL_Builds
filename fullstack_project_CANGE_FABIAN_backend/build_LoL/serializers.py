@@ -1,8 +1,7 @@
 from rest_framework import serializers
-from .models import Champion, Build, AvisBuild, Article, AvisBuild, Rune
+from .models import Champion, Build, AvisBuild, Article, Rune
 
 class ChampionSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Champion
         fields = '__all__'
@@ -16,7 +15,24 @@ class RuneSerializer(serializers.ModelSerializer):
 
     def get_icon_url(self, obj):
         return f"https://ddragon.canisback.com/img/{obj.icon_path}"
-    
+
+class BuildListSerializer(serializers.ModelSerializer):
+    champion_name = serializers.CharField(source='champion.name')
+    image_url = serializers.CharField(source='champion.image_url')
+    likes = serializers.SerializerMethodField()
+    dislikes = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Build
+        fields = ['id', 'name', 'champion_name', 'image_url', 'role', 'likes', 'dislikes', 'rune_major']
+
+    def get_likes(self, obj):
+        return obj.nb_likes() if hasattr(obj, 'nb_likes') else 0
+
+    def get_dislikes(self, obj):
+        return obj.nb_dislikes() if hasattr(obj, 'nb_dislikes') else 0
+
+
 class BuildSerializer(serializers.ModelSerializer):
     champion = ChampionSerializer()
     keystone_icon_url = serializers.SerializerMethodField()
@@ -55,25 +71,11 @@ class BuildSerializer(serializers.ModelSerializer):
 
     def get_secondary_path_icon_url(self, obj):
         return obj.secondary_path_icon_url()
-    
-    def get_shard_offense_icon_url(self, obj):
-        return obj.shard_offense.icon_url()
-    
-    def get_shard_flex_icon_url(self, obj):
-        return obj.shard_flex.icon_url()
-    
-    def get_shard_defense_icon_url(self, obj):
-        return obj.shard_defense.icon_url()
-
-    class Meta:
-        model = Build
-        fields = '__all__'
 
 class AvisBuildSerializer(serializers.ModelSerializer):
     class Meta:
         model = AvisBuild
         fields = '__all__'
-
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
