@@ -14,12 +14,12 @@ export default function HomePage() {
     const fetchData = async () => {
       try {
         const buildsRes = await API.get('builds/')
-        const builds = buildsRes.data
+        const builds = buildsRes.data.results
         setLatestBuilds(builds.slice(0, 5))
         setTopBuilds([...builds].sort((a, b) => (b.likes - b.dislikes) - (a.likes - a.dislikes)).slice(0, 5))
-  
+
         const articlesRes = await API.get('articles/')
-        setArticles(articlesRes.data.slice(0, 5))
+        setArticles(articlesRes.data.results.slice(0, 5))
       } catch (err) {
         console.error("Error loading homepage data", err)
       }
