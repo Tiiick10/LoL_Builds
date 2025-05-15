@@ -1,14 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
-import HeroSection from '@/components/HeroSection'
-import BuildsCard from '@/components/BuildsCard'
-import ArticleCard from '@/components/ArticleCard'
+import HeroSection from '../components/HeroSection'
+import BuildsCard from '../components/BuildsCard'
+import ArticleCard from '../components/ArticleCard'
 import API from '@/utils/axios'
 
 export default function HomePage() {
-  const [latestBuilds, setLatestBuilds] = useState([])
-  const [topBuilds, setTopBuilds] = useState([])
-  const [articles, setArticles] = useState([])
+  const [latestBuilds, setLatestBuilds] = useState<any[]>([])
+  const [topBuilds, setTopBuilds] = useState<any[]>([])
+  const [articles, setArticles] = useState<any[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,11 +17,11 @@ export default function HomePage() {
         const builds = buildsRes.data
         setLatestBuilds(builds.slice(0, 5))
         setTopBuilds([...builds].sort((a, b) => (b.likes - b.dislikes) - (a.likes - a.dislikes)).slice(0, 5))
-
+  
         const articlesRes = await API.get('articles/')
         setArticles(articlesRes.data.slice(0, 5))
       } catch (err) {
-        console.error("Erreur lors du chargement des données d'accueil", err)
+        console.error("Error loading homepage data", err)
       }
     }
     fetchData()
