@@ -24,6 +24,8 @@ interface Build {
   primary_slot3: string
   secondary_slot1: string
   secondary_slot2: string
+  secondary_path: string
+  secondary_path_icon_url: string
   shard_offense: string
   shard_flex: string
   shard_defense: string
@@ -98,24 +100,37 @@ export default function BuildsCard({ build }: Props) {
 
       {/* Secondary Runes */}
       <div className="mt-4">
-        <h4 className="text-white font-semibold mb-2">Secondary Runes</h4>
-        <div className="flex gap-4">
-          {[1, 2].map((i) => {
-            const key = `secondary_slot${i}_icon_url` as keyof Build
-            const alt = `secondary_slot${i}` as keyof Build
-            return (
-              build[key] && (
-                <img
-                  key={i}
-                  src={build[key] as string}
-                  alt={build[alt] as string}
-                  className="w-8 h-8 object-contain"
-                />
-              )
-            )
-          })}
-        </div>
-      </div>
+  <h4 className="text-white font-semibold mb-2">Secondary Runes</h4>
+
+  {build.secondary_path_icon_url && (
+    <div className="flex items-center gap-2 mb-2">
+      <img
+        src={build.secondary_path_icon_url}
+        alt={build.secondary_path}
+        className="w-6 h-6 object-contain"
+      />
+      <span className="text-indigo-300 text-sm">{build.secondary_path}</span>
+    </div>
+  )}
+
+  <div className="flex gap-4">
+    {[1, 2].map((i) => {
+      const key = `secondary_slot${i}_icon_url` as keyof Build
+      const alt = `secondary_slot${i}` as keyof Build
+      return (
+        build[key] && (
+          <img
+            key={i}
+            src={build[key] as string}
+            alt={build[alt] as string}
+            className="w-8 h-8 object-contain"
+          />
+        )
+      )
+    })}
+  </div>
+</div>
+
 
       {/* Shards */}
       <div className="mt-4">
