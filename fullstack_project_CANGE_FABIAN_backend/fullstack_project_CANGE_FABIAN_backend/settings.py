@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'build_LoL',
     'requests',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

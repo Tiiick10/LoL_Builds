@@ -71,8 +71,6 @@
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --color-red-500: oklch(63.7% .237 25.331);
-    --color-yellow-400: oklch(85.2% .199 91.936);
-    --color-green-400: oklch(79.2% .209 151.711);
     --color-indigo-200: oklch(87% .065 274.039);
     --color-indigo-300: oklch(78.5% .115 274.713);
     --color-indigo-400: oklch(67.3% .182 276.935);
@@ -763,10 +761,6 @@
     height: calc(var(--spacing) * 14);
   }
 
-  .h-20 {
-    height: calc(var(--spacing) * 20);
-  }
-
   .h-24 {
     height: calc(var(--spacing) * 24);
   }
@@ -805,10 +799,6 @@
 
   .w-10 {
     width: calc(var(--spacing) * 10);
-  }
-
-  .w-20 {
-    width: calc(var(--spacing) * 20);
   }
 
   .w-24 {
@@ -1505,10 +1495,6 @@
     color: var(--color-gray-700);
   }
 
-  .text-green-400 {
-    color: var(--color-green-400);
-  }
-
   .text-indigo-200\/65 {
     color: #c7d2ffa6;
   }
@@ -1547,10 +1533,6 @@
     .text-white\/50 {
       color: color-mix(in oklab, var(--color-white) 50%, transparent);
     }
-  }
-
-  .text-yellow-400 {
-    color: var(--color-yellow-400);
   }
 
   .capitalize {
