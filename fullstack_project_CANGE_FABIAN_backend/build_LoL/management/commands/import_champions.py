@@ -25,7 +25,7 @@ class Command(BaseCommand):
         for champ_key, champ_info in champions_data.items():
             name = champ_info['id']
             title = champ_info['title']
-            image_url = f"https://ddragon.leagueoflegends.com/cdn/15.9.1/img/champion/{name}.png"
+            image_url = f"https://ddragon.leagueoflegends.com/cdn/img/champion/loading/{name}_0.jpg"
 
             champion, created = Champion.objects.get_or_create(
                 name=name,
