@@ -44,23 +44,28 @@ export default function BuildsCard({ build }: Props) {
         }}
       >
         {/* Filter */}
+        
         <div className="absolute inset-0 bg-black opacity-60 rounded-xl"></div>
 
         {/* Content */}
+
         <div className="relative z-10 flex flex-col h-full justify-between">
 
           {/* Build name */}
+
           <div className="text-center mt-2 mb-15">
             <h1 className="text-2xl font-bold">{build.name}</h1>
           </div>
 
           {/* Primary path */}
+
           <div className="flex items-center gap-5 mt-4">
             <img src={build.primary_path_icon_url} alt={build.primary_path} className="w-8 h-8" />
             <span className="text-2xl">{build.primary_path}</span>
           </div>
 
           {/* Primary runes */}
+
           <div className="flex gap-5 ms-10 mt-5">
             {[1, 2, 3].map((i) => {
               const iconKey = `primary_slot${i}_icon_url` as keyof Build
@@ -76,12 +81,14 @@ export default function BuildsCard({ build }: Props) {
           </div>
 
           {/* Secondary path */}
+
           <div className="flex items-center gap-5 mt-6">
             <img src={build.secondary_path_icon_url} alt={build.secondary_path} className="w-8 h-8" />
             <span className="text-2xl">{build.secondary_path}</span>
           </div>
 
           {/* Secondary runes */}
+
           <div className="flex gap-5 ms-10 mt-5 mb-8">
             {[1, 2].map((i) => {
               const iconKey = `secondary_slot${i}_icon_url` as keyof Build
@@ -97,12 +104,13 @@ export default function BuildsCard({ build }: Props) {
           </div>
 
           {/* Button */}
+
           <div className="flex justify-end">
             <button
               onClick={goToDetail}
               className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white text-sm px-4 py-2 rounded-md transition duration-200"
             >
-              See the builld
+              See the build
             </button>
           </div>
         </div>

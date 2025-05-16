@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.generics import RetrieveAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User
+from django.db.models import Q
 from .models import Champion, Build, AvisBuild, Article
 from .serializers import ChampionSerializer, BuildSerializer, AvisBuildSerializer, ArticleSerializer, BuildListSerializer
 from .permissions import IsRedacteur, IsUtilisateur, IsOwnerOrReadOnly
@@ -81,16 +82,30 @@ def latest_articles(request):
 # Like & Dislike a build
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def like_build(request, pk):
-    build = Build.objects.get(pk=pk)
-    AvisBuild.objects.create(build=build, author=request.user, positif=True)
-    return Response({"message": "Liked!"})
+    try:
+        build = Build.objects.get(pk=pk)
+        AvisBuild.objects.create(build=build, author=request.user, positif=True)
+        return Response({"message": "Liked!"})
+    except Build.DoesNotExist:
+        return Response({"error": "Build not found"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def dislike_build(request, pk):
-    build = Build.objects.get(pk=pk)
-    AvisBuild.objects.create(build=build, author=request.user, positif=False)
-    return Response({"message": "Disliked!"})
+    try:
+        build = Build.objects.get(pk=pk)
+        AvisBuild.objects.create(build=build, author=request.user, positif=False)
+        return Response({"message": "Disliked!"})
+    except Build.DoesNotExist:
+        return Response({"error": "Build not found"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
 
 # Champion list
 class ChampionListView(generics.ListAPIView):
@@ -123,12 +138,22 @@ class BuildListPublicView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 class BuildListFilteredView(generics.ListAPIView):
-    queryset = Build.objects.filter(is_public=True)
     serializer_class = BuildSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ['role', 'champion__name']
-    ordering_fields = ['created_at', 'likes']
+    permission_classes = [AllowAny]
     pagination_class = BuildPagination
+
+    def get_queryset(self):
+        queryset = Build.objects.filter(is_public=True)
+        role = self.request.query_params.get('role')
+        champion_name = self.request.query_params.get('champion__name')
+        ordering = self.request.query_params.get('ordering', 'created_at')
+
+        if role:
+            queryset = queryset.filter(role=role)
+        if champion_name:
+            queryset = queryset.filter(champion__name__icontains=champion_name)  # recherche floue / partielle (ex : ez --> ezreal)
+
+        return queryset.order_by(ordering)
 
 # Avis (comment) create (Utilisateur or Redacteur)
 class AvisBuildCreateView(generics.CreateAPIView):

@@ -2,8 +2,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import API from '@/utils/axios'
-import { BsHandThumbsUp, BsHandThumbsDown } from "react-icons/bs"
+import { BsHandThumbsUp, BsHandThumbsDown, BsFillHouseDoorFill } from "react-icons/bs"
 import axios from '@/utils/axios'
+import Link from 'next/link'
 
 
 export default function BuildDetailPage() {
@@ -26,10 +27,23 @@ export default function BuildDetailPage() {
 
   return (
     <main className="p-8 max-w-5xl mx-auto text-white space-y-10">
+
+      <div className="flex justify-center mb-6">
+        <Link
+          href="/"
+          className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white text-lg px-5 py-3 rounded-lg transition-all"
+        >
+          <BsFillHouseDoorFill size={24} />
+          Home
+        </Link>
+      </div>
+
       {/* Title */}
+
       <h1 className="text-5xl font-bold text-center">{build.name}</h1>
 
       {/* Champion Info */}
+
       <section className="flex items-center gap-6 bg-gray-800 bg-opacity-40 p-6 rounded-lg">
         <img
           src={build.champion?.image_url}
@@ -44,6 +58,7 @@ export default function BuildDetailPage() {
       </section>
 
       {/* Description */}
+
       <section className="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
         <h2 className="text-3xl font-semibold mb-4">Build Description</h2>
         <div
@@ -53,10 +68,12 @@ export default function BuildDetailPage() {
       </section>
 
       {/* Runes */}
+
       <section className="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
         <h2 className="text-3xl font-semibold mb-6">Runes</h2>
 
         {/* Primary Path */}
+
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-3">Primary Path: {build.primary_path}</h3>
           <div className="flex items-center gap-3 mb-4">
@@ -78,6 +95,7 @@ export default function BuildDetailPage() {
         </div>
 
         {/* Secondary Path */}
+
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-3">Secondary Path: {build.secondary_path}</h3>
           <div className="flex items-center gap-3 mb-4">
@@ -97,6 +115,7 @@ export default function BuildDetailPage() {
         </div>
 
         {/* Shards */}
+
         <div>
           <h3 className="text-xl font-semibold mb-3">Stat Shards</h3>
           <div className="flex gap-4">
@@ -114,6 +133,7 @@ export default function BuildDetailPage() {
       </section>
 
       {/* Likes & Dislikes */}
+
       <section className="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
         <h2 className="text-xl font-semibold mb-4">Votes</h2>
         <div className="flex items-center gap-6 text-2xl">
@@ -150,6 +170,7 @@ export default function BuildDetailPage() {
       </section>
 
       {/* Comments */}
+
       <section className="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
         <h2 className="text-xl font-semibold mb-4">Comments</h2>
         {build.avis?.filter((a: any) => !a.banned).length > 0 ? (
