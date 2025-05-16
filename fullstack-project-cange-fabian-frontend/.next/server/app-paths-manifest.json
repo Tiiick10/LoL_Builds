@@ -1,5 +1,4 @@
 {
-  "/(auth)/signin/page": "app/(auth)/signin/page.js",
-  "/builds/page": "app/builds/page.js",
+  "/builds/[id]/page": "app/builds/[id]/page.js",
   "/page": "app/page.js"
 }

@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.generics import RetrieveAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User
 from .models import Champion, Build, AvisBuild, Article
@@ -81,6 +82,10 @@ class BuildListCreateView(generics.ListCreateAPIView):
     queryset = Build.objects.all()
     serializer_class = BuildSerializer
     permission_classes = [IsAuthenticated, IsUtilisateur]
+
+class BuildDetailView(RetrieveAPIView):
+    queryset = Build.objects.all()
+    serializer_class = BuildSerializer
 
 # Build delete (only if user is author)
 class BuildDeleteView(generics.DestroyAPIView):
