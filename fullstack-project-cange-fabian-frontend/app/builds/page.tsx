@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import API from '@/utils/axios'
 import Link from 'next/link'
+import { BsHandThumbsUp, BsHandThumbsDown, BsFillHouseDoorFill } from "react-icons/bs"
 
 interface Build {
   id: number
@@ -49,6 +50,15 @@ export default function BuildsPage() {
 
   return (
     <main className="p-8 text-white">
+      <div className="flex justify-center mb-6">
+        <Link
+          href="/"
+          className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white text-lg px-5 py-3 rounded-lg transition-all"
+        >
+          <BsFillHouseDoorFill size={24} />
+          Home
+        </Link>
+      </div>
       <h1 className="text-3xl font-bold mb-6">All Builds</h1>
 
       {/* Filters */}
@@ -115,11 +125,18 @@ export default function BuildsPage() {
               <img src={build.keystone_icon_url} alt={build.keystone} className="w-6 h-6" />
               <span className="text-sm">{build.keystone}</span>
             </div>
-            <p className="text-sm text-gray-400">
-              👍 {build.likes || 0} / 👎 {build.dislikes || 0}
-            </p>
+            <div className="flex items-center gap-4 text-sm text-gray-400">
+              <div className="flex items-center gap-1">
+                <BsHandThumbsUp className="text-yellow-400 text-lg" />
+                {build.likes || 0}
+              </div>
+              <div className="flex items-center gap-1">
+                <BsHandThumbsDown className="text-red-400 text-lg" />
+                {build.dislikes || 0}
+              </div>
+            </div>
             <Link href={`/builds/${build.id}`}>
-              <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-white text-sm">
+              <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 cursor-pointer px-4 py-2 rounded text-white text-sm">
                 See Build
               </button>
             </Link>

@@ -86,7 +86,7 @@ function BuildsCard({ build }) {
                     className: "absolute inset-0 bg-black opacity-60 rounded-xl"
                 }, void 0, false, {
                     fileName: "[project]/components/BuildsCard.tsx",
-                    lineNumber: 47,
+                    lineNumber: 48,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -99,12 +99,12 @@ function BuildsCard({ build }) {
                                 children: build.name
                             }, void 0, false, {
                                 fileName: "[project]/components/BuildsCard.tsx",
-                                lineNumber: 54,
+                                lineNumber: 57,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 53,
+                            lineNumber: 56,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -116,7 +116,7 @@ function BuildsCard({ build }) {
                                     className: "w-8 h-8"
                                 }, void 0, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 59,
+                                    lineNumber: 63,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -124,13 +124,13 @@ function BuildsCard({ build }) {
                                     children: build.primary_path
                                 }, void 0, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 60,
+                                    lineNumber: 64,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 58,
+                            lineNumber: 62,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -147,13 +147,13 @@ function BuildsCard({ build }) {
                                     className: "w-10 h-10"
                                 }, i, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 68,
+                                    lineNumber: 73,
                                     columnNumber: 17
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 64,
+                            lineNumber: 69,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -165,7 +165,7 @@ function BuildsCard({ build }) {
                                     className: "w-8 h-8"
                                 }, void 0, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 80,
+                                    lineNumber: 86,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -173,13 +173,13 @@ function BuildsCard({ build }) {
                                     children: build.secondary_path
                                 }, void 0, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 81,
+                                    lineNumber: 87,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 79,
+                            lineNumber: 85,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -195,13 +195,13 @@ function BuildsCard({ build }) {
                                     className: "w-10 h-10"
                                 }, i, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 89,
+                                    lineNumber: 96,
                                     columnNumber: 17
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 85,
+                            lineNumber: 92,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -209,21 +209,21 @@ function BuildsCard({ build }) {
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: goToDetail,
                                 className: "bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white text-sm px-4 py-2 rounded-md transition duration-200",
-                                children: "See the builld"
+                                children: "See the build"
                             }, void 0, false, {
                                 fileName: "[project]/components/BuildsCard.tsx",
-                                lineNumber: 101,
+                                lineNumber: 109,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 100,
+                            lineNumber: 108,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/BuildsCard.tsx",
-                    lineNumber: 50,
+                    lineNumber: 52,
                     columnNumber: 9
                 }, this)
             ]
@@ -395,6 +395,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib
 ;
 const API = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].create({
     baseURL: 'http://localhost:8000/api/'
+});
+// Interceptor to attach token to every request
+API.interceptors.request.use((config)=>{
+    const token = localStorage.getItem('access');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
 });
 const __TURBOPACK__default__export__ = API;
 }}),

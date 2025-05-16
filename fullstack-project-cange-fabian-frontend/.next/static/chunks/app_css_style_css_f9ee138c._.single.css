@@ -69,9 +69,11 @@
   :root, :host {
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --color-red-400: oklch(70.4% .191 22.216);
     --color-red-500: oklch(63.7% .237 25.331);
     --color-red-600: oklch(57.7% .245 27.325);
     --color-red-700: oklch(50.5% .213 27.518);
+    --color-yellow-400: oklch(85.2% .199 91.936);
     --color-green-500: oklch(72.3% .219 149.579);
     --color-green-600: oklch(62.7% .194 149.214);
     --color-indigo-200: oklch(87% .065 274.039);
@@ -790,6 +792,10 @@
     display: inline;
   }
 
+  .inline-block {
+    display: inline-block;
+  }
+
   .inline-flex {
     display: inline-flex;
   }
@@ -1460,6 +1466,10 @@
     padding-inline: calc(var(--spacing) * 4);
   }
 
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
+
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
@@ -1669,6 +1679,10 @@
     color: var(--color-indigo-500);
   }
 
+  .text-red-400 {
+    color: var(--color-red-400);
+  }
+
   .text-red-500 {
     color: var(--color-red-500);
   }
@@ -1689,6 +1703,10 @@
     .text-white\/50 {
       color: color-mix(in oklab, var(--color-white) 50%, transparent);
     }
+  }
+
+  .text-yellow-400 {
+    color: var(--color-yellow-400);
   }
 
   .italic {
@@ -1767,6 +1785,12 @@
 
   .transition {
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, visibility, content-visibility, overlay, pointer-events;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
+  .transition-all {
+    transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
@@ -2326,6 +2350,12 @@
     content: var(--tw-content);
     --tw-content: "”";
     content: var(--tw-content);
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-gray-600:hover {
+      background-color: var(--color-gray-600);
+    }
   }
 
   @media (hover: hover) {
