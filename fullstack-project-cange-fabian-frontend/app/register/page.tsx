@@ -5,7 +5,12 @@ import axios from 'axios'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const [form, setForm] = useState({ username: '', email: '', password: '' })
+  const [form, setForm] = useState({
+    username: '',
+    email: '',
+    password: '',
+    password2: ''
+  })
   const [error, setError] = useState('')
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -13,8 +18,9 @@ export default function RegisterPage() {
     try {
       await axios.post('http://localhost:8000/api/register/', form)
       router.push('/login')
-    } catch (err) {
-      setError("Registration failed")
+    } catch (err: any) {
+      const msg = err.response?.data?.error || "Registration failed"
+      setError(msg)
     }
   }
 
@@ -44,6 +50,14 @@ export default function RegisterPage() {
           placeholder="Password"
           value={form.password}
           onChange={e => setForm({ ...form, password: e.target.value })}
+          className="w-full px-3 py-2 rounded bg-gray-700"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={form.password2}
+          onChange={e => setForm({ ...form, password2: e.target.value })}
           className="w-full px-3 py-2 rounded bg-gray-700"
           required
         />

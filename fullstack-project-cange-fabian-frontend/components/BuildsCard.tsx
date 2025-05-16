@@ -50,7 +50,7 @@ export default function BuildsCard({ build }: Props) {
         <div className="relative z-10 flex flex-col h-full justify-between">
 
           {/* Build name */}
-          <div className="text-center mt-2">
+          <div className="text-center mt-2 mb-15">
             <h1 className="text-2xl font-bold">{build.name}</h1>
           </div>
 
@@ -100,9 +100,9 @@ export default function BuildsCard({ build }: Props) {
           <div className="flex justify-end">
             <button
               onClick={goToDetail}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md transition duration-200"
+              className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white text-sm px-4 py-2 rounded-md transition duration-200"
             >
-              Voir le détail
+              See the builld
             </button>
           </div>
         </div>

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Win/OneDrive/Bureau/fullstack_project_CANGE_FABIAN/fullstack-project-cange-fabian-frontend/app/logout/page.tsx"],"sourcesContent":["'use client'\r\nimport { useEffect } from 'react'\r\nimport { useRouter } from 'next/navigation'\r\n\r\nexport default function LogoutPage() {\r\n  const router = useRouter()\r\n\r\n  useEffect(() => {\r\n    localStorage.removeItem('access')\r\n    localStorage.removeItem('refresh')\r\n    router.push('/')\r\n  }, [router])\r\n\r\n  return <p className=\"text-white p-8\">Logging out...</p>\r\n}\r\n"],"names":[],"mappings":";;;;AACA;AACA;;;AAFA;;;AAIe,SAAS;;IACtB,MAAM,SAAS,CAAA,GAAA,qIAAA,CAAA,YAAS,AAAD;IAEvB,CAAA,GAAA,6JAAA,CAAA,YAAS,AAAD;gCAAE;YACR,aAAa,UAAU,CAAC;YACxB,aAAa,UAAU,CAAC;YACxB,OAAO,IAAI,CAAC;QACd;+BAAG;QAAC;KAAO;IAEX,qBAAO,6LAAC;QAAE,WAAU;kBAAiB;;;;;;AACvC;GAVwB;;QACP,qIAAA,CAAA,YAAS;;;KADF","debugId":null}}]
+}
