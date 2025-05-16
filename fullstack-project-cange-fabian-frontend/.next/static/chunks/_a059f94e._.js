@@ -66,7 +66,7 @@ function BuildsCard({ build }) {
                     className: "relative z-10 flex flex-col h-full justify-between",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "text-center mt-2",
+                            className: "text-center mt-2 mb-15",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                                 className: "text-2xl font-bold",
                                 children: build.name
@@ -181,8 +181,8 @@ function BuildsCard({ build }) {
                             className: "flex justify-end",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: goToDetail,
-                                className: "bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md transition duration-200",
-                                children: "Voir le détail"
+                                className: "bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white text-sm px-4 py-2 rounded-md transition duration-200",
+                                children: "See the builld"
                             }, void 0, false, {
                                 fileName: "[project]/components/BuildsCard.tsx",
                                 lineNumber: 101,

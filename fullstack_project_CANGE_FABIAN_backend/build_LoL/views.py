@@ -127,7 +127,7 @@ class BuildListFilteredView(generics.ListAPIView):
     serializer_class = BuildSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['role', 'champion__name']
-    ordering_fields = ['created_at']
+    ordering_fields = ['created_at', 'likes']
     pagination_class = BuildPagination
 
 # Avis (comment) create (Utilisateur or Redacteur)

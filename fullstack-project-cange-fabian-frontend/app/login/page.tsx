@@ -23,7 +23,7 @@ export default function LoginPage() {
       router.push('/')
       setTimeout(() => {
         window.location.reload()
-      }, 75)
+      }, 100)
     } catch (err) {
       setError("Invalid credentials")
     }
