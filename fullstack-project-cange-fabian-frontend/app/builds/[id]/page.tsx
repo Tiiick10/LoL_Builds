@@ -2,6 +2,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import API from '@/utils/axios'
+import { BsHandThumbsUp, BsHandThumbsDown } from "react-icons/bs"
+import axios from '@/utils/axios'
+
 
 export default function BuildDetailPage() {
   const { id } = useParams()
@@ -53,7 +56,7 @@ export default function BuildDetailPage() {
       <section className="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
         <h2 className="text-3xl font-semibold mb-6">Runes</h2>
 
-        {/* Primary */}
+        {/* Primary Path */}
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-3">Primary Path: {build.primary_path}</h3>
           <div className="flex items-center gap-3 mb-4">
@@ -74,7 +77,7 @@ export default function BuildDetailPage() {
           </div>
         </div>
 
-        {/* Secondary */}
+        {/* Secondary Path */}
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-3">Secondary Path: {build.secondary_path}</h3>
           <div className="flex items-center gap-3 mb-4">
@@ -112,27 +115,62 @@ export default function BuildDetailPage() {
 
       {/* Likes & Dislikes */}
       <section className="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
-        <h2 className="text-xl font-semibold mb-2">Votes</h2>
-        <p>👍 {build.likes || 0} / 👎 {build.dislikes || 0}</p>
+        <h2 className="text-xl font-semibold mb-4">Votes</h2>
+        <div className="flex items-center gap-6 text-2xl">
+          <button
+            onClick={async () => {
+              try {
+                await axios.post(`/builds/${id}/like/`)
+                setBuild({ ...build, likes: (build.likes || 0) + 1 })
+              } catch (err) {
+                console.error("Error liking build", err)
+              }
+            }}
+            className="hover:text-green-500 transition"
+            title="Like this build"
+          >
+            <BsHandThumbsUp className="inline mr-1" /> {build.likes || 0}
+          </button>
+
+          <button
+            onClick={async () => {
+              try {
+                await axios.post(`/builds/${id}/dislike/`)
+                setBuild({ ...build, dislikes: (build.dislikes || 0) + 1 })
+              } catch (err) {
+                console.error("Error disliking build", err)
+              }
+            }}
+            className="hover:text-red-500 transition"
+            title="Dislike this build"
+          >
+            <BsHandThumbsDown className="inline mr-1" /> {build.dislikes || 0}
+          </button>
+        </div>
       </section>
 
       {/* Comments */}
       <section className="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
         <h2 className="text-xl font-semibold mb-4">Comments</h2>
-        {build.avis?.length > 0 ? (
-          build.avis.map((a: any, i: number) => (
-            <div key={i} className="border border-gray-600 p-4 rounded-md mb-4">
-              <p className="text-sm text-gray-300 mb-2">
-                <strong>{a.author?.username}</strong> — {new Date(a.date_poste).toLocaleString()}
-              </p>
-              <p>{a.commentaire}</p>
-              <p className="text-sm mt-2 text-indigo-400">
-                {a.positif ? '👍 Positive feedback' : '👎 Negative feedback'}
-              </p>
-            </div>
-          ))
+        {build.avis?.filter((a: any) => !a.banned).length > 0 ? (
+          build.avis
+            .filter((a: any) => !a.banned)
+            .map((a: any, i: number) => (
+              <div key={i} className="border border-gray-600 p-4 rounded-md mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-sm text-gray-300">
+                    <strong>{a.author?.username || 'Anonymous'}</strong> —{" "}
+                    {new Date(a.date_poste).toLocaleString()}
+                  </p>
+                  <span className={`text-sm px-2 py-1 rounded-md ${a.positif ? 'bg-green-600' : 'bg-red-600'}`}>
+                    {a.positif ? '👍 Positive' : '👎 Negative'}
+                  </span>
+                </div>
+                <p className="text-white">{a.commentaire}</p>
+              </div>
+            ))
         ) : (
-          <p className="text-gray-400">No comments yet.</p>
+          <p className="text-gray-400">No visible comments yet.</p>
         )}
       </section>
     </main>

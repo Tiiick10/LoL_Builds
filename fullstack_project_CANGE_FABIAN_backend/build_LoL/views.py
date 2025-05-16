@@ -72,6 +72,20 @@ def latest_articles(request):
     serializer = ArticleSerializer(articles, many=True)
     return Response(serializer.data)
 
+# Like & Dislike a build
+
+@api_view(['POST'])
+def like_build(request, pk):
+    build = Build.objects.get(pk=pk)
+    AvisBuild.objects.create(build=build, author=request.user, positif=True)
+    return Response({"message": "Liked!"})
+
+@api_view(['POST'])
+def dislike_build(request, pk):
+    build = Build.objects.get(pk=pk)
+    AvisBuild.objects.create(build=build, author=request.user, positif=False)
+    return Response({"message": "Disliked!"})
+
 # Champion list
 class ChampionListView(generics.ListAPIView):
     queryset = Champion.objects.all()
