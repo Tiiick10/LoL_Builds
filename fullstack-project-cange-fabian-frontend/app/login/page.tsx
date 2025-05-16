@@ -19,7 +19,11 @@ export default function LoginPage() {
 
       localStorage.setItem('access', res.data.access)
       localStorage.setItem('refresh', res.data.refresh)
+
       router.push('/')
+      setTimeout(() => {
+        window.location.reload()
+      }, 75)
     } catch (err) {
       setError("Invalid credentials")
     }
