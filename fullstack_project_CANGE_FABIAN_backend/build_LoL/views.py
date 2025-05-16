@@ -27,19 +27,25 @@ def toggle_build_visibility(request, pk):
 
 # User registration
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register_user(request):
     username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
+    password2 = request.data.get('password2')
 
-    if not username or not email or not password:
-        return Response({'error': 'All fields are required'}, status=400)
+    if not username or not email or not password or not password2:
+        return Response({'error': 'All fields are required.'}, status=400)
+
+    if password != password2:
+        return Response({'error': 'Passwords do not match.'}, status=400)
 
     if User.objects.filter(username=username).exists():
-        return Response({'error': 'Username already exists'}, status=400)
+        return Response({'error': 'Username already exists.'}, status=400)
 
     user = User.objects.create_user(username=username, email=email, password=password)
-    return Response({'message': 'User created successfully'}, status=201)
+    return Response({'message': 'User created successfully.'}, status=201)
+
 
 # Avis delete by index inside a build
 @api_view(['DELETE'])
