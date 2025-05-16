@@ -35,16 +35,24 @@ class BuildListSerializer(serializers.ModelSerializer):
     image_url = serializers.CharField(source='champion.image_url')
     likes = serializers.SerializerMethodField()
     dislikes = serializers.SerializerMethodField()
+    user_vote = serializers.SerializerMethodField()
 
     class Meta:
         model = Build
-        fields = ['id', 'name', 'champion_name', 'image_url', 'role', 'likes', 'dislikes', 'rune_major']
+        fields = ['id', 'name', 'champion_name', 'image_url', 'role', 'likes', 'dislikes', 'rune_major', 'user_vote']
 
     def get_likes(self, obj):
-        return obj.nb_likes() if hasattr(obj, 'nb_likes') else 0
+        return obj.avis.filter(positif=True).count()
 
     def get_dislikes(self, obj):
-        return obj.nb_dislikes() if hasattr(obj, 'nb_dislikes') else 0
+        return obj.avis.filter(positif=False).count()
+
+    def get_user_vote(self, obj):
+        request = self.context.get('request')
+        if not request or not request.user or not request.user.is_authenticated:
+            return None
+        vote = AvisBuild.objects.filter(author=request.user, build=obj).first()
+        return vote.positif if vote else None
 
 # Avis 
 
@@ -60,6 +68,7 @@ class AvisBuildSerializer(serializers.ModelSerializer):
 class BuildSerializer(serializers.ModelSerializer):
     champion = ChampionSerializer()
     avis = AvisBuildSerializer(many=True, read_only=True)
+    user_vote = serializers.SerializerMethodField()
 
     keystone_icon_url = serializers.SerializerMethodField()
     primary_slot1_icon_url = serializers.SerializerMethodField()
@@ -76,6 +85,13 @@ class BuildSerializer(serializers.ModelSerializer):
     class Meta:
         model = Build
         fields = '__all__'
+
+    def get_user_vote(self, obj):
+        user = self.context.get('request').user
+        if not user or not user.is_authenticated:
+            return None
+        vote = AvisBuild.objects.filter(author=user, build=obj).first()
+        return vote.positif if vote else None
 
     def get_keystone_icon_url(self, obj):
         return obj.keystone_icon_url()

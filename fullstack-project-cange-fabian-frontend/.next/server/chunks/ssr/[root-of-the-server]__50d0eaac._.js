@@ -122,7 +122,7 @@ function LoginPage() {
             router.push('/');
             setTimeout(()=>{
                 window.location.reload();
-            }, 100);
+            }, 120);
         } catch (err) {
             setError("Invalid credentials");
         }
