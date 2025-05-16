@@ -16,7 +16,9 @@ from .views import (
     latest_public_builds,
     latest_articles,
     BuildListPublicView, 
-    PublicArticleListView
+    PublicArticleListView,
+    like_build,
+    dislike_build,
 )
 
 urlpatterns = [
@@ -29,6 +31,8 @@ urlpatterns = [
     path('builds/<int:pk>/', BuildDetailView.as_view(), name='build-detail'),
     path('builds/<int:pk>/delete/', BuildDeleteView.as_view(), name='build-delete'),
     path('builds/<int:pk>/toggle_visibility/', toggle_build_visibility, name='build-toggle-visibility'),
+    path('builds/<int:pk>/like/', like_build, name='like-build'),
+    path('builds/<int:pk>/dislike/', dislike_build, name='dislike-build'),
     path('builds/<int:build_id>/avis/<int:avis_index>/delete/', delete_avis_by_index, name='avis-delete-by-index'),
     path('avis/', AvisBuildCreateView.as_view(), name='avis-create'),
     path('articles/', ArticleListCreateView.as_view(), name='article-list-create'),
