@@ -84,27 +84,43 @@ def latest_articles(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def like_build(request, pk):
-    try:
-        build = Build.objects.get(pk=pk)
+    build = Build.objects.get(pk=pk)
+    existing_avis = AvisBuild.objects.filter(build=build, author=request.user).first()
+
+    if existing_avis:
+        if existing_avis.positif:
+            existing_avis.delete()
+        else:
+            existing_avis.positif = True
+            existing_avis.save()
+    else:
         AvisBuild.objects.create(build=build, author=request.user, positif=True)
-        return Response({"message": "Liked!"})
-    except Build.DoesNotExist:
-        return Response({"error": "Build not found"}, status=404)
-    except Exception as e:
-        return Response({"error": str(e)}, status=500)
+
+    return Response({
+        "likes": build.avis.filter(positif=True).count(),
+        "dislikes": build.avis.filter(positif=False).count(),
+    })
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def dislike_build(request, pk):
-    try:
-        build = Build.objects.get(pk=pk)
+    build = Build.objects.get(pk=pk)
+    existing_avis = AvisBuild.objects.filter(build=build, author=request.user).first()
+
+    if existing_avis:
+        if not existing_avis.positif:
+            existing_avis.delete()
+        else:
+            existing_avis.positif = False
+            existing_avis.save()
+    else:
         AvisBuild.objects.create(build=build, author=request.user, positif=False)
-        return Response({"message": "Disliked!"})
-    except Build.DoesNotExist:
-        return Response({"error": "Build not found"}, status=404)
-    except Exception as e:
-        return Response({"error": str(e)}, status=500)
+
+    return Response({
+        "likes": build.avis.filter(positif=True).count(),
+        "dislikes": build.avis.filter(positif=False).count(),
+    })
 
 
 # Champion list
@@ -136,6 +152,9 @@ class BuildListPublicView(generics.ListAPIView):
     queryset = Build.objects.filter(is_public=True)
     serializer_class = BuildListSerializer
     permission_classes = [AllowAny]
+
+    def get_serializer_context(self):
+        return {'request': self.request}
 
 class BuildListFilteredView(generics.ListAPIView):
     serializer_class = BuildSerializer

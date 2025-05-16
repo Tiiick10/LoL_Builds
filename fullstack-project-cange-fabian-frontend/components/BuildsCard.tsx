@@ -44,7 +44,7 @@ export default function BuildsCard({ build }: Props) {
         }}
       >
         {/* Filter */}
-        
+
         <div className="absolute inset-0 bg-black opacity-60 rounded-xl"></div>
 
         {/* Content */}
@@ -53,7 +53,7 @@ export default function BuildsCard({ build }: Props) {
 
           {/* Build name */}
 
-          <div className="text-center mt-2 mb-15">
+          <div className="text-center mt-2 mb-20">
             <h1 className="text-2xl font-bold">{build.name}</h1>
           </div>
 
@@ -66,7 +66,7 @@ export default function BuildsCard({ build }: Props) {
 
           {/* Primary runes */}
 
-          <div className="flex gap-5 ms-10 mt-5">
+          <div className="flex gap-5 ms-10 mt-2">
             {[1, 2, 3].map((i) => {
               const iconKey = `primary_slot${i}_icon_url` as keyof Build
               return (
@@ -89,7 +89,7 @@ export default function BuildsCard({ build }: Props) {
 
           {/* Secondary runes */}
 
-          <div className="flex gap-5 ms-10 mt-5 mb-8">
+          <div className="flex gap-5 ms-10 mt-2 mb-8">
             {[1, 2].map((i) => {
               const iconKey = `secondary_slot${i}_icon_url` as keyof Build
               return (

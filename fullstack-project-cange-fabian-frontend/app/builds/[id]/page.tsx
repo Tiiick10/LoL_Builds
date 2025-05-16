@@ -6,22 +6,40 @@ import { BsHandThumbsUp, BsHandThumbsDown, BsFillHouseDoorFill } from "react-ico
 import axios from '@/utils/axios'
 import Link from 'next/link'
 
-
 export default function BuildDetailPage() {
   const { id } = useParams()
   const [build, setBuild] = useState<any>(null)
+  const [userVote, setUserVote] = useState<null | boolean>(null)
 
   useEffect(() => {
     const fetchBuild = async () => {
       try {
         const res = await API.get(`builds/${id}/`)
         setBuild(res.data)
+        setUserVote(res.data.user_vote)
       } catch (err) {
         console.error('Error loading build:', err)
       }
     }
     if (id) fetchBuild()
   }, [id])
+
+  const handleVote = async (type: 'like' | 'dislike') => {
+    try {
+      const res = await API.post(`/builds/${id}/${type}/`)
+      setBuild((prev: any) => ({
+        ...prev,
+        likes: res.data.likes,
+        dislikes: res.data.dislikes
+      }))
+      setUserVote(type === 'like' ? true : false)
+      if ((type === 'like' && userVote === true) || (type === 'dislike' && userVote === false)) {
+        setUserVote(null)
+      }
+    } catch (err) {
+      console.error(`Error ${type} build`, err)
+    }
+  }
 
   if (!build) return <p className="p-8 text-white">Loading build...</p>
 
@@ -77,8 +95,8 @@ export default function BuildDetailPage() {
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-3">Primary Path: {build.primary_path}</h3>
           <div className="flex items-center gap-3 mb-4">
-            <img src={build.primary_path_icon_url} alt="Primary Path" className="w-10 h-10" />
-            <img src={build.keystone_icon_url} alt="Keystone" className="w-10 h-10" />
+            <img src={build.primary_path_icon_url} className="w-10 h-10" />
+            <img src={build.keystone_icon_url} className="w-10 h-10" />
             <span>{build.keystone}</span>
           </div>
           <div className="flex gap-4">
@@ -99,7 +117,7 @@ export default function BuildDetailPage() {
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-3">Secondary Path: {build.secondary_path}</h3>
           <div className="flex items-center gap-3 mb-4">
-            <img src={build.secondary_path_icon_url} alt="Secondary Path" className="w-10 h-10" />
+            <img src={build.secondary_path_icon_url} className="w-10 h-10" />
           </div>
           <div className="flex gap-4">
             {[1, 2].map(i => (
@@ -138,30 +156,16 @@ export default function BuildDetailPage() {
         <h2 className="text-xl font-semibold mb-4">Votes</h2>
         <div className="flex items-center gap-6 text-2xl">
           <button
-            onClick={async () => {
-              try {
-                await axios.post(`/builds/${id}/like/`)
-                setBuild({ ...build, likes: (build.likes || 0) + 1 })
-              } catch (err) {
-                console.error("Error liking build", err)
-              }
-            }}
-            className="hover:text-green-500 transition"
+            onClick={() => handleVote('like')}
+            className={`hover:text-green-500 transition ${userVote === true ? 'text-green-500' : ''}`}
             title="Like this build"
           >
             <BsHandThumbsUp className="inline mr-1" /> {build.likes || 0}
           </button>
 
           <button
-            onClick={async () => {
-              try {
-                await axios.post(`/builds/${id}/dislike/`)
-                setBuild({ ...build, dislikes: (build.dislikes || 0) + 1 })
-              } catch (err) {
-                console.error("Error disliking build", err)
-              }
-            }}
-            className="hover:text-red-500 transition"
+            onClick={() => handleVote('dislike')}
+            className={`hover:text-red-500 transition ${userVote === false ? 'text-red-500' : ''}`}
             title="Dislike this build"
           >
             <BsHandThumbsDown className="inline mr-1" /> {build.dislikes || 0}
