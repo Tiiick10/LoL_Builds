@@ -77,9 +77,13 @@ rune_slots = {
     ]
 }
 
-shards = [
-    'adaptive_force', 'attack_speed', 'ability_haste',
-    'movement_speed', 'bonus_health', 'tenacity'
+shard_choices = [
+    'StatModsAdaptiveForceIcon',
+    'StatModsArmorIcon',
+    'StatModsAttackSpeedIcon',
+    'StatModsCDRScalingIcon',
+    'StatModsHealthScalingIcon',
+    'StatModsMagicResIcon',
 ]
 
 champions = list(Champion.objects.all())
@@ -113,12 +117,12 @@ for i in range(10):
         secondary_path=secondary_path,
         secondary_slot1=secondary_slots[0],
         secondary_slot2=secondary_slots[1],
-        shard_offense=random.choice(shards),
-        shard_flex=random.choice(shards),
-        shard_defense=random.choice(shards),
+        shard_offense=random.choice(shard_choices),
+        shard_flex=random.choice(shard_choices),
+        shard_defense=random.choice(shard_choices),
     )
 
-print("10 builds generated ")
+print("10 builds generated")
 
 # Articles
 categories = ['guide', 'news', 'patch', 'meta']
@@ -135,7 +139,7 @@ for i in range(10):
         auteur=redac,
     )
 
-print("10 articles generated ")
+print("10 articles generated")
 
 # AvisBuild
 for build in Build.objects.all():
@@ -155,5 +159,4 @@ for build in Build.objects.all():
         )
 
 print("Comments for builds generated")
-
 print("Users, builds and articles created successfully.")

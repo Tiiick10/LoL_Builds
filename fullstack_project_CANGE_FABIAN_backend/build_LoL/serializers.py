@@ -100,13 +100,15 @@ class BuildSerializer(serializers.ModelSerializer):
         return obj.secondary_path_icon_url()
 
     def get_shard_offense_icon_url(self, obj):
-        return obj.shard_offense_icon_url()
+        return f"https://ddragon.canisback.com/img/perk-images/StatMods/{obj.shard_offense}.png"
 
     def get_shard_flex_icon_url(self, obj):
-        return obj.shard_flex_icon_url()
+        return f"https://ddragon.canisback.com/img/perk-images/StatMods/{obj.shard_flex}.png"
 
     def get_shard_defense_icon_url(self, obj):
-        return obj.shard_defense_icon_url()
+        return f"https://ddragon.canisback.com/img/perk-images/StatMods/{obj.shard_defense}.png"
+
+
 
 # Build List (summary)
 
