@@ -2,6 +2,11 @@
 @layer properties {
   @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
     *, :before, :after, ::backdrop {
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
       --tw-space-y-reverse: 0;
       --tw-border-style: solid;
       --tw-gradient-position: initial;
@@ -587,8 +592,20 @@
     margin-inline: auto;
   }
 
+  .ms-5 {
+    margin-inline-start: calc(var(--spacing) * 5);
+  }
+
   .ms-10 {
     margin-inline-start: calc(var(--spacing) * 10);
+  }
+
+  .me-5 {
+    margin-inline-end: calc(var(--spacing) * 5);
+  }
+
+  .me-7 {
+    margin-inline-end: calc(var(--spacing) * 7);
   }
 
   .mt-2 {
@@ -599,8 +616,16 @@
     margin-top: calc(var(--spacing) * 4);
   }
 
+  .mt-5 {
+    margin-top: calc(var(--spacing) * 5);
+  }
+
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
+  }
+
+  .mt-7 {
+    margin-top: calc(var(--spacing) * 7);
   }
 
   .mr-1 {
@@ -659,6 +684,10 @@
     height: calc(var(--spacing) * 10);
   }
 
+  .h-12 {
+    height: calc(var(--spacing) * 12);
+  }
+
   .h-14 {
     height: calc(var(--spacing) * 14);
   }
@@ -697,6 +726,10 @@
 
   .w-10 {
     width: calc(var(--spacing) * 10);
+  }
+
+  .w-12 {
+    width: calc(var(--spacing) * 12);
   }
 
   .w-16 {
@@ -739,12 +772,12 @@
     flex-shrink: 0;
   }
 
-  .cursor-pointer {
-    cursor: pointer;
+  .transform {
+    transform: var(--tw-rotate-x, ) var(--tw-rotate-y, ) var(--tw-rotate-z, ) var(--tw-skew-x, ) var(--tw-skew-y, );
   }
 
-  .resize {
-    resize: both;
+  .cursor-pointer {
+    cursor: pointer;
   }
 
   .grid-cols-1 {
@@ -932,6 +965,10 @@
 
   .bg-center {
     background-position: center;
+  }
+
+  .object-contain {
+    object-fit: contain;
   }
 
   .object-cover {
@@ -1385,6 +1422,31 @@
     -webkit-transform: translate3d(10px, 0, 0)scale(1.2);
     transform: translate3d(10px, 0, 0)scale(1.2);
   }
+}
+
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false
 }
 
 @property --tw-space-y-reverse {
