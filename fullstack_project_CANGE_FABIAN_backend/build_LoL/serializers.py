@@ -28,33 +28,7 @@ class RuneSerializer(serializers.ModelSerializer):
     def get_icon_url(self, obj):
         return f"https://ddragon.canisback.com/img/{obj.icon_path}"
 
-# Build List
-
-class BuildListSerializer(serializers.ModelSerializer):
-    champion_name = serializers.CharField(source='champion.name')
-    image_url = serializers.CharField(source='champion.image_url')
-    likes = serializers.SerializerMethodField()
-    dislikes = serializers.SerializerMethodField()
-    user_vote = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Build
-        fields = ['id', 'name', 'champion_name', 'image_url', 'role', 'likes', 'dislikes', 'rune_major', 'user_vote']
-
-    def get_likes(self, obj):
-        return obj.avis.filter(positif=True).count()
-
-    def get_dislikes(self, obj):
-        return obj.avis.filter(positif=False).count()
-
-    def get_user_vote(self, obj):
-        request = self.context.get('request')
-        if not request or not request.user or not request.user.is_authenticated:
-            return None
-        vote = AvisBuild.objects.filter(author=request.user, build=obj).first()
-        return vote.positif if vote else None
-
-# Avis 
+# Avis
 
 class AvisBuildSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
@@ -63,12 +37,14 @@ class AvisBuildSerializer(serializers.ModelSerializer):
         model = AvisBuild
         fields = ['positif', 'commentaire', 'date_poste', 'banned', 'author']
 
-# Builds
+# Build detail
 
 class BuildSerializer(serializers.ModelSerializer):
     champion = ChampionSerializer()
     avis = AvisBuildSerializer(many=True, read_only=True)
     user_vote = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField()
+    dislikes = serializers.SerializerMethodField()
 
     keystone_icon_url = serializers.SerializerMethodField()
     primary_slot1_icon_url = serializers.SerializerMethodField()
@@ -92,6 +68,12 @@ class BuildSerializer(serializers.ModelSerializer):
             return None
         vote = AvisBuild.objects.filter(author=user, build=obj).first()
         return vote.positif if vote else None
+
+    def get_likes(self, obj):
+        return obj.avis.filter(positif=True).count()
+
+    def get_dislikes(self, obj):
+        return obj.avis.filter(positif=False).count()
 
     def get_keystone_icon_url(self, obj):
         return obj.keystone_icon_url()
@@ -126,7 +108,25 @@ class BuildSerializer(serializers.ModelSerializer):
     def get_shard_defense_icon_url(self, obj):
         return obj.shard_defense_icon_url()
 
-# Articles
+# Build List (summary)
+
+class BuildListSerializer(serializers.ModelSerializer):
+    champion_name = serializers.CharField(source='champion.name')
+    image_url = serializers.CharField(source='champion.image_url')
+    likes = serializers.SerializerMethodField()
+    dislikes = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Build
+        fields = ['id', 'name', 'champion_name', 'image_url', 'role', 'likes', 'dislikes', 'keystone_icon_url']
+
+    def get_likes(self, obj):
+        return obj.avis.filter(positif=True).count()
+
+    def get_dislikes(self, obj):
+        return obj.avis.filter(positif=False).count()
+
+# Article
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
