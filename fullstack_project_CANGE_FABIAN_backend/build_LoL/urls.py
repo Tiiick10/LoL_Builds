@@ -28,6 +28,9 @@ from .views import (
 
     # Auth
     register_user,
+
+    # Token Expiration
+    custom_login_view,
 )
 
 urlpatterns = [
@@ -63,6 +66,11 @@ urlpatterns = [
     path('articles/latest/', latest_articles, name='latest-articles'),
 
     # Auth
-    
+
     path('register/', register_user, name='register'),
+
+    # Token Expiration
+
+    path('custom-login/', custom_login_view, name='custom-login'),
+
 ]
