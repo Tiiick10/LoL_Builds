@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import API from '@/utils/axios'
 import { BsHandThumbsUp, BsHandThumbsDown, BsFillHouseDoorFill } from "react-icons/bs"
+import { PiKeyReturnLight } from "react-icons/pi";
 import axios from '@/utils/axios'
 import Link from 'next/link'
 
@@ -47,7 +48,14 @@ export default function BuildDetailPage() {
   return (
     <main className="p-8 max-w-5xl mx-auto text-white space-y-10">
 
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-6 gap-10">
+        <Link
+          href="/builds"
+          className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white text-lg px-5 py-3 rounded-lg transition-all"
+        >
+          <PiKeyReturnLight size={24} />
+          Return
+        </Link>
         <Link
           href="/"
           className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white text-lg px-5 py-3 rounded-lg transition-all"
