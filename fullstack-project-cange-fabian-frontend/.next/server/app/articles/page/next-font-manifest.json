@@ -1,7 +1,7 @@
 {
   "pages": {},
   "app": {
-    "[project]/app/register/page": [
+    "[project]/app/articles/page": [
       "static/media/nacelle_italic-s.p.6e3faeac.woff2",
       "static/media/nacelle_regular-s.p.802336a3.woff2",
       "static/media/nacelle_semibolditalic-s.p.7e949854.woff2",

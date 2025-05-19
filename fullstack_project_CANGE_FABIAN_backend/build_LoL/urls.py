@@ -42,4 +42,5 @@ urlpatterns = [
     path('articles/<int:pk>/update/', ArticleUpdateView.as_view(), name='article-update'),
     path('articles/<int:pk>/delete/', ArticleDeleteView.as_view(), name='article-delete'),
     path('register/', register_user, name='register'),
+    path('public-articles/', PublicArticleListView.as_view(), name='public-articles'),
 ]

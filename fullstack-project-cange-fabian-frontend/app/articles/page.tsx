@@ -5,9 +5,9 @@ import ArticleCard from '@/components/ArticleCard'
 
 interface Article {
   id: number
-  title: string
-  category: string
-  image_url: string
+  titre: string
+  categorie: string
+  image_banner: string
 }
 
 export default function ArticlesPage() {
@@ -16,7 +16,7 @@ export default function ArticlesPage() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await API.get('articles/')
+        const res = await API.get('public-articles/')
         setArticles(res.data)
       } catch (err) {
         console.error('Erreur lors du chargement des articles:', err)
