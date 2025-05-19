@@ -4,15 +4,44 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import RetrieveAPIView
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Champion, Build, AvisBuild, Article
 from .serializers import (
     ChampionSerializer, BuildSerializer, AvisBuildSerializer,
     ArticleSerializer, BuildListSerializer
 )
 from .permissions import IsRedacteur, IsUtilisateur, IsOwnerOrReadOnly
+from datetime import timedelta
 
 # Create your views here.
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def custom_login_view(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    user = authenticate(username=username, password=password)
+
+    if user is None:
+        return Response({"detail": "Invalid credentials"}, status=401)
+
+    refresh = RefreshToken.for_user(user)
+
+    if user.is_superuser:
+        refresh.set_exp(lifetime=timedelta(hours=6))  # 6 heures pour admin
+    else:
+        refresh.set_exp(lifetime=timedelta(hours=1))  # 1 heure pour les autres
+
+    return Response({
+        "access": str(refresh.access_token),
+        "refresh": str(refresh),
+        "user_id": user.id,
+        "username": user.username,
+        "is_superuser": user.is_superuser,
+    })
 
 # ---- #
 # AUTH #
