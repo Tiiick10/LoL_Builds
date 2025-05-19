@@ -66,6 +66,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$par
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
+'use client';
 ;
 ;
 function BuildsCard({ build }) {
@@ -75,6 +76,7 @@ function BuildsCard({ build }) {
     const goToDetail = ()=>{
         router.push(`/builds/${build.id}`);
     };
+    const fallback = (name)=>`/images/custom-runes/${name.replace(/ /g, '').replace(':', '').replace("'", '')}.png`;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$parallax$2d$tilt$2f$dist$2f$modern$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
         tiltMaxAngleX: 5,
         tiltMaxAngleY: 5,
@@ -94,7 +96,7 @@ function BuildsCard({ build }) {
                     className: "absolute inset-0 bg-black opacity-60 rounded-xl"
                 }, void 0, false, {
                     fileName: "[project]/components/BuildsCard.tsx",
-                    lineNumber: 48,
+                    lineNumber: 52,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -107,24 +109,27 @@ function BuildsCard({ build }) {
                                 children: build.name
                             }, void 0, false, {
                                 fileName: "[project]/components/BuildsCard.tsx",
-                                lineNumber: 57,
+                                lineNumber: 56,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 56,
+                            lineNumber: 55,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex items-center gap-5 mt-4",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                    src: build.primary_path_icon_url,
+                                    src: build.primary_path_icon_url || 'invalid-url',
                                     alt: build.primary_path,
-                                    className: "w-8 h-8"
+                                    className: "w-8 h-8",
+                                    onError: (e)=>{
+                                        e.currentTarget.src = fallback(build.primary_path);
+                                    }
                                 }, void 0, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 63,
+                                    lineNumber: 60,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -132,13 +137,13 @@ function BuildsCard({ build }) {
                                     children: build.primary_path
                                 }, void 0, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 64,
+                                    lineNumber: 66,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 62,
+                            lineNumber: 59,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -149,13 +154,17 @@ function BuildsCard({ build }) {
                                 3
                             ].map((i)=>{
                                 const iconKey = `primary_slot${i}_icon_url`;
+                                const nameKey = `primary_slot${i}`;
                                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                    src: build[iconKey],
+                                    src: build[iconKey] || 'invalid-url',
                                     alt: `Primary Rune ${i}`,
-                                    className: "w-10 h-10"
+                                    className: "w-10 h-10",
+                                    onError: (e)=>{
+                                        e.currentTarget.src = fallback(build[nameKey]);
+                                    }
                                 }, i, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 73,
+                                    lineNumber: 74,
                                     columnNumber: 17
                                 }, this);
                             })
@@ -168,9 +177,12 @@ function BuildsCard({ build }) {
                             className: "flex items-center gap-5 mt-6",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                    src: build.secondary_path_icon_url,
+                                    src: build.secondary_path_icon_url || 'invalid-url',
                                     alt: build.secondary_path,
-                                    className: "w-8 h-8"
+                                    className: "w-8 h-8",
+                                    onError: (e)=>{
+                                        e.currentTarget.src = fallback(build.secondary_path);
+                                    }
                                 }, void 0, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
                                     lineNumber: 86,
@@ -181,7 +193,7 @@ function BuildsCard({ build }) {
                                     children: build.secondary_path
                                 }, void 0, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 87,
+                                    lineNumber: 92,
                                     columnNumber: 13
                                 }, this)
                             ]
@@ -197,19 +209,23 @@ function BuildsCard({ build }) {
                                 2
                             ].map((i)=>{
                                 const iconKey = `secondary_slot${i}_icon_url`;
+                                const nameKey = `secondary_slot${i}`;
                                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                    src: build[iconKey],
+                                    src: build[iconKey] || 'invalid-url',
                                     alt: `Secondary Rune ${i}`,
-                                    className: "w-10 h-10"
+                                    className: "w-10 h-10",
+                                    onError: (e)=>{
+                                        e.currentTarget.src = fallback(build[nameKey]);
+                                    }
                                 }, i, false, {
                                     fileName: "[project]/components/BuildsCard.tsx",
-                                    lineNumber: 96,
+                                    lineNumber: 100,
                                     columnNumber: 17
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 92,
+                            lineNumber: 95,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -220,29 +236,29 @@ function BuildsCard({ build }) {
                                 children: "See the build"
                             }, void 0, false, {
                                 fileName: "[project]/components/BuildsCard.tsx",
-                                lineNumber: 109,
+                                lineNumber: 112,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/BuildsCard.tsx",
-                            lineNumber: 108,
+                            lineNumber: 111,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/BuildsCard.tsx",
-                    lineNumber: 52,
+                    lineNumber: 54,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/BuildsCard.tsx",
-            lineNumber: 36,
+            lineNumber: 42,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/BuildsCard.tsx",
-        lineNumber: 35,
+        lineNumber: 41,
         columnNumber: 5
     }, this);
 }

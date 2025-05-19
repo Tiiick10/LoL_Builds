@@ -35,4 +35,4 @@ class Command(BaseCommand):
                     )
                     count += 1
 
-        self.stdout.write(self.style.SUCCESS(f"✅ {count} runes successfully registered."))
+        self.stdout.write(self.style.SUCCESS(f"{count} runes successfully registered."))

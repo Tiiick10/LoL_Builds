@@ -26,7 +26,10 @@ class RuneSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'icon_path', 'icon_url']
 
     def get_icon_url(self, obj):
-        return f"https://ddragon.canisback.com/img/{obj.icon_path}"
+        if obj.icon_path.startswith("perk-images/"):
+            return f"https://ddragon.canisback.com/img/{obj.icon_path}"
+        else:
+            return f"/images/custom-runes/{obj.icon_path.split('/')[-1]}"
 
 # Avis
 
