@@ -32,9 +32,10 @@ export default function BuildDetailPage() {
         likes: res.data.likes,
         dislikes: res.data.dislikes
       }))
-      setUserVote(type === 'like' ? true : false)
       if ((type === 'like' && userVote === true) || (type === 'dislike' && userVote === false)) {
-        setUserVote(null)
+        setUserVote(null)  // cancel vote
+      } else {
+        setUserVote(type === 'like')
       }
     } catch (err) {
       console.error(`Error ${type} build`, err)
