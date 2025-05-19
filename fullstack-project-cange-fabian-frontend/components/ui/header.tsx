@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import Logo from './logo'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -28,8 +28,16 @@ export default function Header() {
           
           {/* Logo / Home */}
 
-          <div className="flex flex-1 items-center">
-            <Logo />
+          <div className="flex mt-7">
+            <Link href="/" className="cursor-pointer">
+              <Image
+                src="/images/logo.svg"
+                width={75}
+                height={75}
+                alt="Logo"
+                className="object-contain"
+              />
+            </Link>
           </div>
 
           {/* Auth */}

@@ -440,7 +440,7 @@ function HomePage() {
                 setTopBuilds([
                     ...builds
                 ].sort((a, b)=>b.likes - b.dislikes - (a.likes - a.dislikes)).slice(0, 5));
-                const articlesRes = await __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get('public-articles/');
+                const articlesRes = await __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get('articles/public/');
                 setArticles(articlesRes.data.slice(0, 5));
             } catch (err) {
                 console.error("Error loading homepage data", err);

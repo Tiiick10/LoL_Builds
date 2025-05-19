@@ -18,7 +18,7 @@ export default function HomePage() {
         setLatestBuilds(builds.slice(0, 5))
         setTopBuilds([...builds].sort((a, b) => (b.likes - b.dislikes) - (a.likes - a.dislikes)).slice(0, 5))
 
-        const articlesRes = await API.get('public-articles/')
+        const articlesRes = await API.get('articles/public/')
         setArticles(articlesRes.data.slice(0, 5))
       } catch (err) {
         console.error("Error loading homepage data", err)
