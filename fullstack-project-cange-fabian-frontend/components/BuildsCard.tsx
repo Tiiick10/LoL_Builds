@@ -1,3 +1,6 @@
+
+'use client'
+
 import React from "react"
 import Tilt from 'react-parallax-tilt'
 import { useRouter } from 'next/navigation'
@@ -31,6 +34,9 @@ export default function BuildsCard({ build }: Props) {
     router.push(`/builds/${build.id}`)
   }
 
+  const fallback = (name: string) =>
+    `/images/custom-runes/${name.replace(/ /g, '').replace(':', '').replace("'", '')}.png`
+
   return (
     <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} glareEnable={false} className="rounded-xl">
       <div
@@ -43,67 +49,64 @@ export default function BuildsCard({ build }: Props) {
           height: "60vh",
         }}
       >
-        {/* Filter */}
-
         <div className="absolute inset-0 bg-black opacity-60 rounded-xl"></div>
 
-        {/* Content */}
-
         <div className="relative z-10 flex flex-col h-full justify-between">
-
-          {/* Build name */}
-
           <div className="text-center mt-2 mb-20">
             <h1 className="text-2xl font-bold">{build.name}</h1>
           </div>
 
-          {/* Primary path */}
-
           <div className="flex items-center gap-5 mt-4">
-            <img src={build.primary_path_icon_url} alt={build.primary_path} className="w-8 h-8" />
+            <img
+              src={build.primary_path_icon_url || 'invalid-url'}
+              alt={build.primary_path}
+              className="w-8 h-8"
+              onError={(e) => { e.currentTarget.src = fallback(build.primary_path) }}
+            />
             <span className="text-2xl">{build.primary_path}</span>
           </div>
-
-          {/* Primary runes */}
 
           <div className="flex gap-5 ms-10 mt-2">
             {[1, 2, 3].map((i) => {
               const iconKey = `primary_slot${i}_icon_url` as keyof Build
+              const nameKey = `primary_slot${i}` as keyof Build
               return (
                 <img
                   key={i}
-                  src={build[iconKey] as string}
+                  src={build[iconKey] as string || 'invalid-url'}
                   alt={`Primary Rune ${i}`}
                   className="w-10 h-10"
+                  onError={(e) => { e.currentTarget.src = fallback(build[nameKey] as string) }}
                 />
               )
             })}
           </div>
 
-          {/* Secondary path */}
-
           <div className="flex items-center gap-5 mt-6">
-            <img src={build.secondary_path_icon_url} alt={build.secondary_path} className="w-8 h-8" />
+            <img
+              src={build.secondary_path_icon_url || 'invalid-url'}
+              alt={build.secondary_path}
+              className="w-8 h-8"
+              onError={(e) => { e.currentTarget.src = fallback(build.secondary_path) }}
+            />
             <span className="text-2xl">{build.secondary_path}</span>
           </div>
-
-          {/* Secondary runes */}
 
           <div className="flex gap-5 ms-10 mt-2 mb-8">
             {[1, 2].map((i) => {
               const iconKey = `secondary_slot${i}_icon_url` as keyof Build
+              const nameKey = `secondary_slot${i}` as keyof Build
               return (
                 <img
                   key={i}
-                  src={build[iconKey] as string}
+                  src={build[iconKey] as string || 'invalid-url'}
                   alt={`Secondary Rune ${i}`}
                   className="w-10 h-10"
+                  onError={(e) => { e.currentTarget.src = fallback(build[nameKey] as string) }}
                 />
               )
             })}
           </div>
-
-          {/* Button */}
 
           <div className="flex justify-end">
             <button
