@@ -14,8 +14,8 @@ interface Build {
     name: string
     image_url: string
   }
-  likes: number
-  dislikes: number
+  positive_comments: number
+  negative_comments: number
   created_at: string
 }
 
@@ -101,7 +101,7 @@ export default function BuildsPage() {
 
           <option value="created_at">Newest</option>
           <option value="-created_at">Oldest</option>
-          <option value="-likes">Most Liked</option>
+          <option value="most_liked">Most Liked</option>
         </select>
       </div>
 
@@ -128,11 +128,11 @@ export default function BuildsPage() {
             <div className="flex items-center gap-4 text-sm text-gray-400">
               <div className="flex items-center gap-1">
                 <BsHandThumbsUp className="text-yellow-400 text-lg" />
-                {build.likes || 0}
+                {build.positive_comments || 0}
               </div>
               <div className="flex items-center gap-1">
                 <BsHandThumbsDown className="text-red-400 text-lg" />
-                {build.dislikes || 0}
+                {build.negative_comments || 0}
               </div>
             </div>
             <Link href={`/builds/${build.id}`}>

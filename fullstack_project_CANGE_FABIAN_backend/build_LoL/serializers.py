@@ -100,20 +100,66 @@ class BuildSerializer(serializers.ModelSerializer):
 # Build List (summary)
 
 class BuildListSerializer(serializers.ModelSerializer):
-    champion_name = serializers.CharField(source='champion.name')
-    image_url = serializers.CharField(source='champion.image_url')
+    champion = ChampionSerializer(read_only=True)
+    image_url = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
     dislikes = serializers.SerializerMethodField()
+    positive_comments = serializers.IntegerField(read_only=True)
+    negative_comments = serializers.IntegerField(read_only=True)
+    keystone_icon_url = serializers.SerializerMethodField()
+    primary_slot1_icon_url = serializers.SerializerMethodField()
+    primary_slot2_icon_url = serializers.SerializerMethodField()
+    primary_slot3_icon_url = serializers.SerializerMethodField()
+    secondary_slot1_icon_url = serializers.SerializerMethodField()
+    secondary_slot2_icon_url = serializers.SerializerMethodField()
+    primary_path_icon_url = serializers.SerializerMethodField()
+    secondary_path_icon_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Build
-        fields = ['id', 'name', 'champion_name', 'image_url', 'role', 'likes', 'dislikes', 'keystone_icon_url']
+        fields = [
+            'id', 'name', 'champion', 'image_url', 'role',
+            'likes', 'dislikes', 'keystone_icon_url',
+            'positive_comments', 'negative_comments',
+            'primary_slot1_icon_url', 'primary_slot2_icon_url', 
+            'primary_slot3_icon_url','secondary_slot1_icon_url', 
+            'secondary_slot2_icon_url','primary_path_icon_url', 
+            'secondary_path_icon_url' , 'primary_slot1', 
+            'primary_slot2', 'primary_slot3',
+            'secondary_slot1', 'secondary_slot2',
+        ]
+
+    def get_image_url(self, obj):
+        return obj.champion.image_url if obj.champion else None
 
     def get_likes(self, obj):
         return obj.avis.filter(positif=True).count()
 
     def get_dislikes(self, obj):
         return obj.avis.filter(positif=False).count()
+    def get_keystone_icon_url(self, obj):
+        return obj.keystone_icon_url()
+
+    def get_primary_slot1_icon_url(self, obj):
+        return obj.primary_slot1_icon_url()
+
+    def get_primary_slot2_icon_url(self, obj):
+        return obj.primary_slot2_icon_url()
+
+    def get_primary_slot3_icon_url(self, obj):
+        return obj.primary_slot3_icon_url()
+
+    def get_secondary_slot1_icon_url(self, obj):
+        return obj.secondary_slot1_icon_url()
+
+    def get_secondary_slot2_icon_url(self, obj):
+        return obj.secondary_slot2_icon_url()
+
+    def get_primary_path_icon_url(self, obj):
+        return obj.primary_path_icon_url()
+
+    def get_secondary_path_icon_url(self, obj):
+        return obj.secondary_path_icon_url()
 
 # Article
 
