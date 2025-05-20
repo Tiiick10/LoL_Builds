@@ -43,7 +43,8 @@ class AvisBuildSerializer(serializers.ModelSerializer):
 # Build detail
 
 class BuildSerializer(serializers.ModelSerializer):
-    champion = ChampionSerializer()
+    champion = serializers.PrimaryKeyRelatedField(queryset=Champion.objects.all())
+    author = UserSerializer(read_only=True)
     avis = AvisBuildSerializer(many=True, read_only=True)
 
     keystone_icon_url = serializers.SerializerMethodField()
@@ -61,6 +62,7 @@ class BuildSerializer(serializers.ModelSerializer):
     class Meta:
         model = Build
         fields = '__all__'
+        read_only_fields = ['author']
 
     def get_keystone_icon_url(self, obj):
         return obj.keystone_icon_url()
@@ -94,8 +96,6 @@ class BuildSerializer(serializers.ModelSerializer):
 
     def get_shard_defense_icon_url(self, obj):
         return f"https://ddragon.canisback.com/img/perk-images/StatMods/{obj.shard_defense}.png"
-
-
 
 # Build List (summary)
 

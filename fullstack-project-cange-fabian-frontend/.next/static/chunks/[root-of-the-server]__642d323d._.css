@@ -72,6 +72,7 @@
     --color-yellow-400: oklch(85.2% .199 91.936);
     --color-green-400: oklch(79.2% .209 151.711);
     --color-green-600: oklch(62.7% .194 149.214);
+    --color-green-700: oklch(52.7% .154 150.069);
     --color-indigo-500: oklch(58.5% .233 277.117);
     --color-indigo-600: oklch(51.1% .262 276.966);
     --color-indigo-700: oklch(45.7% .24 277.023);
@@ -620,6 +621,10 @@
     margin-top: calc(var(--spacing) * 7);
   }
 
+  .mr-2 {
+    margin-right: calc(var(--spacing) * 2);
+  }
+
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
   }
@@ -726,6 +731,14 @@
 
   .h-full {
     height: 100%;
+  }
+
+  .max-h-48 {
+    max-height: calc(var(--spacing) * 48);
+  }
+
+  .max-h-64 {
+    max-height: calc(var(--spacing) * 64);
   }
 
   .min-h-screen {
@@ -896,6 +909,10 @@
     overflow: hidden;
   }
 
+  .overflow-y-auto {
+    overflow-y: auto;
+  }
+
   .rounded {
     border-radius: .25rem;
   }
@@ -1026,6 +1043,10 @@
 
   .object-fill {
     object-fit: fill;
+  }
+
+  .p-2 {
+    padding: calc(var(--spacing) * 2);
   }
 
   .p-3 {
@@ -1322,6 +1343,12 @@
   }
 
   @media (hover: hover) {
+    .hover\:bg-green-700:hover {
+      background-color: var(--color-green-700);
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:bg-indigo-500:hover {
       background-color: var(--color-indigo-500);
     }
@@ -1342,6 +1369,18 @@
   @supports (overflow: clip) {
     .supports-\[overflow\:clip\]\:overflow-clip {
       overflow: clip;
+    }
+  }
+
+  @media (width >= 40rem) {
+    .sm\:grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width >= 40rem) {
+    .sm\:grid-cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 

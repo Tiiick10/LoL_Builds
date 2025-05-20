@@ -36,6 +36,7 @@ class Build(models.Model):
     ('StatModsCDRScalingIcon', 'Ability Haste'),
     ('StatModsHealthScalingIcon', 'Bonus Health'),
     ('StatModsMagicResIcon', 'Magic Resist'),
+    ('StatModsMoveSpeedIcon', 'Movement Speed'),
     ]
 
 
