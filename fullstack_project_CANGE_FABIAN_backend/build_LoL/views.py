@@ -5,10 +5,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
+from django.db.models import Count, Q
 from .models import Champion, Build, AvisBuild, Article
 from .serializers import (
     ChampionSerializer, BuildSerializer, AvisBuildSerializer,
@@ -110,7 +110,7 @@ class BuildListPublicView(generics.ListAPIView):
         return {'request': self.request}
 
 class BuildListFilteredView(generics.ListAPIView):
-    serializer_class = BuildSerializer
+    serializer_class = BuildListSerializer
     permission_classes = [AllowAny]
     pagination_class = BuildPagination
 
@@ -119,14 +119,37 @@ class BuildListFilteredView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Build.objects.filter(is_public=True)
+
+        # Filters
+        
         role = self.request.query_params.get('role')
         champion = self.request.query_params.get('champion__name')
-        ordering = self.request.query_params.get('ordering', 'created_at')
+        ordering = self.request.query_params.get('ordering', '-created_at')
+
         if role:
             queryset = queryset.filter(role=role)
         if champion:
             queryset = queryset.filter(champion__name__icontains=champion)
-        return queryset.order_by(ordering)
+
+        # Psoitive/Negative comments
+
+        queryset = queryset.annotate(
+            positive_comments=Count('avis', filter=Q(avis__positif=True, avis__banned=False)),
+            negative_comments=Count('avis', filter=Q(avis__positif=False, avis__banned=False)),
+        )
+
+        # Dynamically ordering
+
+        if ordering == 'most_liked':
+            queryset = queryset.order_by('-positive_comments')
+        elif ordering == 'created_at':
+            queryset = queryset.order_by('-created_at')
+        elif ordering == '-created_at':
+            queryset = queryset.order_by('created_at')
+        else:
+            queryset = queryset.order_by('-created_at')  # Default value
+
+        return queryset
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])

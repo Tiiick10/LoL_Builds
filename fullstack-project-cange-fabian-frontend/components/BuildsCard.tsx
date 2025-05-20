@@ -1,4 +1,3 @@
-
 'use client'
 
 import React from "react"
@@ -13,14 +12,20 @@ interface Build {
   }
   primary_path: string
   primary_path_icon_url: string
+  primary_slot1: string
   primary_slot1_icon_url: string
+  primary_slot2: string
   primary_slot2_icon_url: string
+  primary_slot3: string
   primary_slot3_icon_url: string
   secondary_path: string
   secondary_path_icon_url: string
+  secondary_slot1: string
   secondary_slot1_icon_url: string
+  secondary_slot2: string
   secondary_slot2_icon_url: string
 }
+
 
 interface Props {
   build: Build
@@ -34,8 +39,10 @@ export default function BuildsCard({ build }: Props) {
     router.push(`/builds/${build.id}`)
   }
 
-  const fallback = (name: string) =>
-    `/images/custom-runes/${name.replace(/ /g, '').replace(':', '').replace("'", '')}.png`
+  const fallback = (name?: string) => {
+    if (!name || typeof name !== 'string') return ''
+    return `/images/custom-runes/${name.replace(/ /g, '').replace(':', '').replace("'", '')}.png`
+  }
 
   return (
     <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} glareEnable={false} className="rounded-xl">
@@ -58,7 +65,7 @@ export default function BuildsCard({ build }: Props) {
 
           <div className="flex items-center gap-5 mt-4">
             <img
-              src={build.primary_path_icon_url || 'invalid-url'}
+              src={build.primary_path_icon_url || fallback(build.primary_path)}
               alt={build.primary_path}
               className="w-8 h-8"
               onError={(e) => { e.currentTarget.src = fallback(build.primary_path) }}
@@ -73,10 +80,10 @@ export default function BuildsCard({ build }: Props) {
               return (
                 <img
                   key={i}
-                  src={build[iconKey] as string || 'invalid-url'}
+                  src={build[iconKey] as string || fallback(build[nameKey] as string)}
                   alt={`Primary Rune ${i}`}
                   className="w-10 h-10"
-                  onError={(e) => { e.currentTarget.src = fallback(build[nameKey] as string) }}
+                  onError={(e) => { e.currentTarget.src = fallback(build[nameKey] as string | undefined) }}
                 />
               )
             })}
@@ -84,7 +91,7 @@ export default function BuildsCard({ build }: Props) {
 
           <div className="flex items-center gap-5 mt-6">
             <img
-              src={build.secondary_path_icon_url || 'invalid-url'}
+              src={build.secondary_path_icon_url || fallback(build.secondary_path)}
               alt={build.secondary_path}
               className="w-8 h-8"
               onError={(e) => { e.currentTarget.src = fallback(build.secondary_path) }}
@@ -99,10 +106,10 @@ export default function BuildsCard({ build }: Props) {
               return (
                 <img
                   key={i}
-                  src={build[iconKey] as string || 'invalid-url'}
+                  src={build[iconKey] as string || fallback(build[nameKey] as string)}
                   alt={`Secondary Rune ${i}`}
                   className="w-10 h-10"
-                  onError={(e) => { e.currentTarget.src = fallback(build[nameKey] as string) }}
+                  onError={(e) => { e.currentTarget.src = fallback(build[nameKey] as string | undefined) }}
                 />
               )
             })}
