@@ -82,6 +82,9 @@ class BuildListCreateView(generics.ListCreateAPIView):
     def get_serializer_context(self):
         return {'request': self.request}
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 class BuildDetailView(RetrieveAPIView):
     queryset = Build.objects.all()
     serializer_class = BuildSerializer
@@ -121,7 +124,7 @@ class BuildListFilteredView(generics.ListAPIView):
         queryset = Build.objects.filter(is_public=True)
 
         # Filters
-        
+
         role = self.request.query_params.get('role')
         champion = self.request.query_params.get('champion__name')
         ordering = self.request.query_params.get('ordering', '-created_at')

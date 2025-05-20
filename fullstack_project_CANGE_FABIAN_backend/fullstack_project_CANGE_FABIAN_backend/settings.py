@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'build_LoL',
+    'build_LoL.apps.BuildLolConfig',
     'requests',
     'django_filters',
 ]
