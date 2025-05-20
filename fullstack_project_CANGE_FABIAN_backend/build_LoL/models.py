@@ -124,18 +124,6 @@ class Rune(models.Model):
     def __str__(self):
         return self.name
 
-    
-class AvisBuild(models.Model):
-    build = models.ForeignKey('Build', on_delete=models.CASCADE, related_name='avis')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    positif = models.BooleanField()
-    commentaire = models.TextField(blank=True)
-    date_poste = models.DateTimeField(auto_now_add=True)
-    banned = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Avis de {self.author.username} sur {self.build.name}"
-
 
 class Article(models.Model):
     CATEGORIE_CHOICES = [

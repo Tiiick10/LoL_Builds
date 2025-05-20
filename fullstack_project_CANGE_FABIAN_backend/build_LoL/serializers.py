@@ -45,9 +45,6 @@ class AvisBuildSerializer(serializers.ModelSerializer):
 class BuildSerializer(serializers.ModelSerializer):
     champion = ChampionSerializer()
     avis = AvisBuildSerializer(many=True, read_only=True)
-    user_vote = serializers.SerializerMethodField()
-    likes = serializers.SerializerMethodField()
-    dislikes = serializers.SerializerMethodField()
 
     keystone_icon_url = serializers.SerializerMethodField()
     primary_slot1_icon_url = serializers.SerializerMethodField()
@@ -64,19 +61,6 @@ class BuildSerializer(serializers.ModelSerializer):
     class Meta:
         model = Build
         fields = '__all__'
-
-    def get_user_vote(self, obj):
-        user = self.context.get('request').user
-        if not user or not user.is_authenticated:
-            return None
-        vote = AvisBuild.objects.filter(author=user, build=obj).first()
-        return vote.positif if vote else None
-
-    def get_likes(self, obj):
-        return obj.avis.filter(positif=True).count()
-
-    def get_dislikes(self, obj):
-        return obj.avis.filter(positif=False).count()
 
     def get_keystone_icon_url(self, obj):
         return obj.keystone_icon_url()

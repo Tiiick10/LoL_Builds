@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -138,46 +139,6 @@ def toggle_build_visibility(request, pk):
     build.save()
     return Response({"id": build.id, "is_public": build.is_public}, status=200)
 
-# ----------- #
-# VOTE SYSTEM #
-# ----------- #
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def like_build(request, pk):
-    build = Build.objects.get(pk=pk)
-    avis = AvisBuild.objects.filter(build=build, author=request.user).first()
-    if avis:
-        if avis.positif:
-            avis.delete()
-        else:
-            avis.positif = True
-            avis.save()
-    else:
-        AvisBuild.objects.create(build=build, author=request.user, positif=True)
-    return Response({
-        "likes": build.avis.filter(positif=True).count(),
-        "dislikes": build.avis.filter(positif=False).count(),
-    })
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def dislike_build(request, pk):
-    build = Build.objects.get(pk=pk)
-    avis = AvisBuild.objects.filter(build=build, author=request.user).first()
-    if avis:
-        if not avis.positif:
-            avis.delete()
-        else:
-            avis.positif = False
-            avis.save()
-    else:
-        AvisBuild.objects.create(build=build, author=request.user, positif=False)
-    return Response({
-        "likes": build.avis.filter(positif=True).count(),
-        "dislikes": build.avis.filter(positif=False).count(),
-    })
-
 # ---- #
 # AVIS #
 # ---- #
@@ -195,10 +156,30 @@ def delete_avis_by_index(request, build_id, avis_index):
         return Response({"message": f"Avis #{avis_index + 1} deleted."})
     return Response({"error": "Index out of range"}, status=400)
 
-class AvisBuildCreateView(generics.CreateAPIView):
-    queryset = AvisBuild.objects.all()
-    serializer_class = AvisBuildSerializer
-    permission_classes = [IsAuthenticated, IsUtilisateur]
+
+class AvisBuildCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, build_id):
+        try:
+            build = Build.objects.get(id=build_id)
+        except Build.DoesNotExist:
+            return Response({'error': 'Build not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
+        data['author'] = request.user.id
+        data['build'] = build.id
+
+        serializer = AvisBuildSerializer(data=data)
+        if serializer.is_valid():
+            AvisBuild.objects.create(
+                build=build,
+                author=request.user,
+                positif=serializer.validated_data['positif'],
+                commentaire=serializer.validated_data['commentaire']
+            )
+            return Response({'message': 'Avis posted.'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ------------ #
 # ARTICLE CRUD #

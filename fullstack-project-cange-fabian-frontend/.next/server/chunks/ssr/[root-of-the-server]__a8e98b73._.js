@@ -138,36 +138,40 @@ function BuildDetailPage() {
     const params = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useParams"])();
     const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
     const [build, setBuild] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [userVote, setUserVote] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [newComment, setNewComment] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [isPositive, setIsPositive] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [submitMessage, setSubmitMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const fallback = (name)=>`/images/custom-runes/${name.replace(/ /g, "").replace(":", "").replace("'", "")}.png`;
+    const fetchBuild = async ()=>{
+        try {
+            const res = await __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(`builds/${id}/`);
+            setBuild(res.data);
+        } catch (err) {
+            console.error("Error loading build:", err);
+        }
+    };
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        const fetchBuild = async ()=>{
-            try {
-                const res = await __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(`builds/${id}/`);
-                setBuild(res.data);
-                setUserVote(res.data.user_vote);
-            } catch (err) {
-                console.error('Error loading build:', err);
-            }
-        };
         if (id) fetchBuild();
     }, [
         id
     ]);
-    const handleVote = async (type)=>{
+    const handleSubmitComment = async ()=>{
+        if (!newComment.trim()) return;
         try {
-            const res = await __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(`/builds/${id}/${type}/`);
-            setBuild((prev)=>prev ? {
-                    ...prev,
-                    likes: res.data.likes,
-                    dislikes: res.data.dislikes
-                } : null);
-            if (type === 'like' && userVote === true || type === 'dislike' && userVote === false) {
-                setUserVote(null);
-            } else {
-                setUserVote(type === 'like');
-            }
+            await __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(`/builds/${id}/avis/`, {
+                commentaire: newComment,
+                positif: isPositive
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access")}`
+                }
+            });
+            setSubmitMessage("Commentaire envoyé !");
+            setNewComment("");
+            fetchBuild();
         } catch (err) {
-            console.error(`Error ${type} build`, err);
+            console.error(err);
+            setSubmitMessage("Erreur lors de l'envoi.");
         }
     };
     if (!build) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -175,10 +179,9 @@ function BuildDetailPage() {
         children: "Loading build..."
     }, void 0, false, {
         fileName: "[project]/app/builds/[id]/page.tsx",
-        lineNumber: 98,
+        lineNumber: 110,
         columnNumber: 22
     }, this);
-    const fallback = (name)=>`/images/custom-runes/${name.replace(/ /g, '').replace(':', '').replace("'", '')}.png`;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
         className: "p-8 max-w-5xl mx-auto text-white space-y-10",
         children: [
@@ -193,14 +196,14 @@ function BuildDetailPage() {
                                 size: 24
                             }, void 0, false, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 106,
+                                lineNumber: 119,
                                 columnNumber: 11
                             }, this),
                             "Home"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 105,
+                        lineNumber: 115,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -211,20 +214,20 @@ function BuildDetailPage() {
                                 size: 24
                             }, void 0, false, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 110,
+                                lineNumber: 126,
                                 columnNumber: 11
                             }, this),
                             "Return"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 109,
+                        lineNumber: 122,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/builds/[id]/page.tsx",
-                lineNumber: 104,
+                lineNumber: 114,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -232,7 +235,7 @@ function BuildDetailPage() {
                 children: build.name
             }, void 0, false, {
                 fileName: "[project]/app/builds/[id]/page.tsx",
-                lineNumber: 115,
+                lineNumber: 131,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -244,7 +247,7 @@ function BuildDetailPage() {
                         className: "w-32 h-32 rounded-lg object-cover border-2 border-indigo-500"
                     }, void 0, false, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 118,
+                        lineNumber: 134,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -256,7 +259,7 @@ function BuildDetailPage() {
                                         children: "Champion:"
                                     }, void 0, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 120,
+                                        lineNumber: 140,
                                         columnNumber: 14
                                     }, this),
                                     " ",
@@ -264,7 +267,7 @@ function BuildDetailPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 120,
+                                lineNumber: 140,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -273,7 +276,7 @@ function BuildDetailPage() {
                                         children: "Role:"
                                     }, void 0, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 121,
+                                        lineNumber: 141,
                                         columnNumber: 14
                                     }, this),
                                     " ",
@@ -281,7 +284,7 @@ function BuildDetailPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 121,
+                                lineNumber: 141,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -290,27 +293,27 @@ function BuildDetailPage() {
                                         children: "Author:"
                                     }, void 0, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 122,
+                                        lineNumber: 142,
                                         columnNumber: 14
                                     }, this),
                                     " ",
-                                    build.author?.username || 'Unknown'
+                                    build.author?.username || "Unknown"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 122,
+                                lineNumber: 142,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 119,
+                        lineNumber: 139,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/builds/[id]/page.tsx",
-                lineNumber: 117,
+                lineNumber: 133,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -321,7 +324,7 @@ function BuildDetailPage() {
                         children: "Build Description"
                     }, void 0, false, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 127,
+                        lineNumber: 147,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -331,13 +334,13 @@ function BuildDetailPage() {
                         }
                     }, void 0, false, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 128,
+                        lineNumber: 148,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/builds/[id]/page.tsx",
-                lineNumber: 126,
+                lineNumber: 146,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -348,7 +351,7 @@ function BuildDetailPage() {
                         children: "Runes"
                     }, void 0, false, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 132,
+                        lineNumber: 156,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -362,7 +365,7 @@ function BuildDetailPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 135,
+                                lineNumber: 159,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -374,7 +377,7 @@ function BuildDetailPage() {
                                         className: "w-10 h-10"
                                     }, void 0, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 137,
+                                        lineNumber: 161,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -383,20 +386,20 @@ function BuildDetailPage() {
                                         className: "w-10 h-10"
                                     }, void 0, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 138,
+                                        lineNumber: 166,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: build.keystone
                                     }, void 0, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 139,
+                                        lineNumber: 171,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 136,
+                                lineNumber: 160,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -412,18 +415,18 @@ function BuildDetailPage() {
                                         className: "w-10 h-10"
                                     }, i, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 143,
+                                        lineNumber: 175,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 141,
+                                lineNumber: 173,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 134,
+                        lineNumber: 158,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -437,7 +440,7 @@ function BuildDetailPage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 152,
+                                lineNumber: 189,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -448,12 +451,12 @@ function BuildDetailPage() {
                                     className: "w-10 h-10"
                                 }, void 0, false, {
                                     fileName: "[project]/app/builds/[id]/page.tsx",
-                                    lineNumber: 154,
+                                    lineNumber: 191,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 153,
+                                lineNumber: 190,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -468,18 +471,18 @@ function BuildDetailPage() {
                                         className: "w-10 h-10"
                                     }, i, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 158,
+                                        lineNumber: 199,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 156,
+                                lineNumber: 197,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 151,
+                        lineNumber: 188,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -489,15 +492,15 @@ function BuildDetailPage() {
                                 children: "Stat Shards"
                             }, void 0, false, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 167,
+                                lineNumber: 213,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex gap-4",
                                 children: [
-                                    'shard_offense',
-                                    'shard_flex',
-                                    'shard_defense'
+                                    "shard_offense",
+                                    "shard_flex",
+                                    "shard_defense"
                                 ].map((key)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                         src: build[`${key}_icon_url`],
                                         alt: build[key],
@@ -505,90 +508,24 @@ function BuildDetailPage() {
                                         className: "w-8 h-8"
                                     }, key, false, {
                                         fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 170,
+                                        lineNumber: 216,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 168,
+                                lineNumber: 214,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 166,
+                        lineNumber: 212,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/builds/[id]/page.tsx",
-                lineNumber: 131,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
-                className: "bg-gray-800 bg-opacity-40 p-6 rounded-lg",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                        className: "text-xl font-semibold mb-4",
-                        children: "Votes"
-                    }, void 0, false, {
-                        fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 180,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center gap-6 text-2xl",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>handleVote('like'),
-                                className: `hover:text-green-500 transition ${userVote === true ? 'text-green-500' : ''}`,
-                                title: "Like this build",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$bs$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BsHandThumbsUp"], {
-                                        className: "inline mr-1"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 185,
-                                        columnNumber: 13
-                                    }, this),
-                                    " ",
-                                    build.likes || 0
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 182,
-                                columnNumber: 11
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>handleVote('dislike'),
-                                className: `hover:text-red-500 transition ${userVote === false ? 'text-red-500' : ''}`,
-                                title: "Dislike this build",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$bs$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BsHandThumbsDown"], {
-                                        className: "inline mr-1"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/builds/[id]/page.tsx",
-                                        lineNumber: 190,
-                                        columnNumber: 13
-                                    }, this),
-                                    " ",
-                                    build.dislikes || 0
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/builds/[id]/page.tsx",
-                                lineNumber: 187,
-                                columnNumber: 11
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 181,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/app/builds/[id]/page.tsx",
-                lineNumber: 179,
+                lineNumber: 155,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -599,7 +536,7 @@ function BuildDetailPage() {
                         children: "Comments"
                     }, void 0, false, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 196,
+                        lineNumber: 230,
                         columnNumber: 9
                     }, this),
                     build.avis?.filter((a)=>!a.banned).length > 0 ? build.avis.filter((a)=>!a.banned).map((a, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -612,11 +549,11 @@ function BuildDetailPage() {
                                             className: "text-sm text-gray-300",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                    children: a.author?.username || 'Anonymous'
+                                                    children: a.author?.username || "Anonymous"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/builds/[id]/page.tsx",
-                                                    lineNumber: 202,
-                                                    columnNumber: 19
+                                                    lineNumber: 238,
+                                                    columnNumber: 21
                                                 }, this),
                                                 " —",
                                                 " ",
@@ -624,54 +561,176 @@ function BuildDetailPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/builds/[id]/page.tsx",
-                                            lineNumber: 201,
-                                            columnNumber: 17
+                                            lineNumber: 237,
+                                            columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: `text-sm px-2 py-1 rounded-md ${a.positif ? 'bg-green-600' : 'bg-red-600'}`,
-                                            children: a.positif ? '👍 Positive' : '👎 Negative'
-                                        }, void 0, false, {
+                                            className: `flex items-center gap-1 text-sm px-2 py-1 rounded-md ${a.positif ? "bg-green-600" : "bg-red-600"}`,
+                                            children: [
+                                                a.positif ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$bs$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BsHandThumbsUpFill"], {
+                                                    className: "text-white"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/builds/[id]/page.tsx",
+                                                    lineNumber: 246,
+                                                    columnNumber: 34
+                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$bs$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BsHandThumbsDownFill"], {
+                                                    className: "text-white"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/builds/[id]/page.tsx",
+                                                    lineNumber: 246,
+                                                    columnNumber: 82
+                                                }, this),
+                                                a.positif ? "Positive" : "Negative"
+                                            ]
+                                        }, void 0, true, {
                                             fileName: "[project]/app/builds/[id]/page.tsx",
-                                            lineNumber: 205,
-                                            columnNumber: 17
+                                            lineNumber: 241,
+                                            columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/builds/[id]/page.tsx",
-                                    lineNumber: 200,
-                                    columnNumber: 15
+                                    lineNumber: 236,
+                                    columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-white",
                                     children: a.commentaire
                                 }, void 0, false, {
                                     fileName: "[project]/app/builds/[id]/page.tsx",
-                                    lineNumber: 209,
-                                    columnNumber: 15
+                                    lineNumber: 250,
+                                    columnNumber: 17
                                 }, this)
                             ]
                         }, i, true, {
                             fileName: "[project]/app/builds/[id]/page.tsx",
-                            lineNumber: 199,
-                            columnNumber: 13
+                            lineNumber: 235,
+                            columnNumber: 15
                         }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         className: "text-gray-400",
                         children: "No visible comments yet."
                     }, void 0, false, {
                         fileName: "[project]/app/builds/[id]/page.tsx",
-                        lineNumber: 213,
+                        lineNumber: 254,
                         columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "mt-6 border-t border-gray-700 pt-6",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                className: "text-xl mb-4",
+                                children: "Write a comment"
+                            }, void 0, false, {
+                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                lineNumber: 258,
+                                columnNumber: 11
+                            }, this),
+                            submitMessage && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-green-400 mb-2",
+                                children: submitMessage
+                            }, void 0, false, {
+                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                lineNumber: 259,
+                                columnNumber: 29
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                placeholder: "Write a comment...",
+                                className: "w-full p-3 rounded bg-gray-900 text-white border border-gray-600 mb-3",
+                                value: newComment,
+                                onChange: (e)=>setNewComment(e.target.value)
+                            }, void 0, false, {
+                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                lineNumber: 260,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-4 mb-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "flex items-center gap-1",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "radio",
+                                                name: "avis",
+                                                checked: isPositive,
+                                                onChange: ()=>setIsPositive(true)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                                lineNumber: 268,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$bs$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BsHandThumbsUpFill"], {
+                                                className: "text-white"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                                lineNumber: 274,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Positive"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/builds/[id]/page.tsx",
+                                        lineNumber: 267,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "flex items-center gap-1",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "radio",
+                                                name: "avis",
+                                                checked: !isPositive,
+                                                onChange: ()=>setIsPositive(false)
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                                lineNumber: 277,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$bs$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BsHandThumbsDownFill"], {
+                                                className: "text-white"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                                lineNumber: 283,
+                                                columnNumber: 15
+                                            }, this),
+                                            " Negative"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/builds/[id]/page.tsx",
+                                        lineNumber: 276,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                lineNumber: 266,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: handleSubmitComment,
+                                className: "bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-white",
+                                children: "Submit"
+                            }, void 0, false, {
+                                fileName: "[project]/app/builds/[id]/page.tsx",
+                                lineNumber: 286,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/builds/[id]/page.tsx",
+                        lineNumber: 257,
+                        columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/builds/[id]/page.tsx",
-                lineNumber: 195,
+                lineNumber: 229,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/builds/[id]/page.tsx",
-        lineNumber: 103,
+        lineNumber: 113,
         columnNumber: 5
     }, this);
 }
