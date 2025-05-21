@@ -1,4 +1,4 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -16,6 +16,7 @@ from .serializers import (
 )
 from .permissions import IsRedacteur, IsUtilisateur, IsOwnerOrReadOnly
 from datetime import timedelta
+import re
 
 # Create your views here.
 
@@ -66,6 +67,20 @@ def register_user(request):
     User.objects.create_user(username=username, email=email, password=password)
     return Response({'message': 'User created successfully.'}, status=201)
 
+# ------------------------- #
+# Champion by name in Build #
+# ------------------------- #
+
+@api_view(['GET'])
+def get_champion_by_name(request):
+    name = request.GET.get('name')
+    if not name:
+        return Response({"error": "Name parameter is required."}, status=400)
+
+    champs = Champion.objects.filter(name__iexact=name)
+    serializer = ChampionSerializer(champs, many=True)
+    return Response(serializer.data)
+
 # ---------- #
 # BUILD CRUD #
 # ---------- #
@@ -74,16 +89,35 @@ class ChampionListView(generics.ListAPIView):
     queryset = Champion.objects.all()
     serializer_class = ChampionSerializer
 
+def normalize_champion_name(name):
+    return re.sub(r"[^a-zA-Z0-9]", "", name).lower()
+
 class BuildListCreateView(generics.ListCreateAPIView):
     queryset = Build.objects.all()
     serializer_class = BuildSerializer
-    permission_classes = [IsAuthenticated, IsUtilisateur]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_context(self):
         return {'request': self.request}
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        champion_name = self.request.data.get("champion_name")
+        if not champion_name:
+            raise serializers.ValidationError({"champion": "Ce champ est requis."})
+
+        try:
+            champion = Champion.objects.get(name__iexact=champion_name)
+        except Champion.DoesNotExist:
+            raise serializers.ValidationError({"champion": f"Champion '{champion_name}' introuvable."})
+
+        # Additional validation for primary and secondary paths
+
+        serializer.save(
+            author=self.request.user,
+            champion=champion,
+            primary_path=self.request.data.get("primary_path"),
+            secondary_path=self.request.data.get("secondary_path")
+            )   
 
 class BuildDetailView(RetrieveAPIView):
     queryset = Build.objects.all()

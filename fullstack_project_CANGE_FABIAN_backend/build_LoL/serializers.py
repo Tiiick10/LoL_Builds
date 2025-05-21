@@ -43,7 +43,7 @@ class AvisBuildSerializer(serializers.ModelSerializer):
 # Build detail
 
 class BuildSerializer(serializers.ModelSerializer):
-    champion = serializers.PrimaryKeyRelatedField(queryset=Champion.objects.all())
+    champion = ChampionSerializer(read_only=True)
     author = UserSerializer(read_only=True)
     avis = AvisBuildSerializer(many=True, read_only=True)
 
