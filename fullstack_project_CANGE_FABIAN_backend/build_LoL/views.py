@@ -32,10 +32,14 @@ def custom_login_view(request):
 
     refresh = RefreshToken.for_user(user)
 
-    if user.is_superuser:
-        refresh.set_exp(lifetime=timedelta(hours=6))  # 6 heures pour admin
+    if user.groups.filter(name="Rédacteur").exists():
+        role = "Redacteur"
+    elif user.groups.filter(name="Admin").exists():
+        role = "Admin"
+    elif user.groups.filter(name="Manager").exists():
+        role = "Manager"
     else:
-        refresh.set_exp(lifetime=timedelta(hours=1))  # 1 heure pour les autres
+        role = "User"
 
     return Response({
         "access": str(refresh.access_token),
@@ -43,7 +47,11 @@ def custom_login_view(request):
         "user_id": user.id,
         "username": user.username,
         "is_superuser": user.is_superuser,
+        "role": role,
     })
+
+
+
 
 # ---- #
 # AUTH #
@@ -250,6 +258,9 @@ class ArticleListCreateView(generics.ListCreateAPIView):
     serializer_class = ArticleSerializer
     permission_classes = [IsAuthenticated, IsRedacteur]
 
+    def perform_create(self, serializer):
+        serializer.save(auteur=self.request.user)
+
 class ArticleDetailView(generics.RetrieveAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
@@ -265,9 +276,17 @@ class ArticleDeleteView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, IsRedacteur]
 
 class PublicArticleListView(generics.ListAPIView):
-    queryset = Article.objects.all().order_by('-date_creation')
     serializer_class = ArticleSerializer
     permission_classes = [AllowAny]
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        queryset = Article.objects.all().order_by('-date_creation')
+        categorie = self.request.query_params.get('categorie')
+        if categorie:
+            queryset = queryset.filter(categorie=categorie)
+        return queryset
+
 
 # ------------------ #
 # HOMEPAGE SHORTCUTS #
