@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     # Champion
     ChampionListView,
+    get_champion_by_name,
 
     # Builds
     BuildListFilteredView,
@@ -36,6 +37,7 @@ urlpatterns = [
     # Champion
 
     path('champions/', ChampionListView.as_view(), name='champion-list'),
+    path("champions/", get_champion_by_name),
 
     # Builds
 

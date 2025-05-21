@@ -27,63 +27,64 @@ const ROLES = [
 ];
 const SHARD_ROW_1 = [
     {
-        label: 'Adaptive Force',
-        value: 'StatModsAdaptiveForceIcon'
+        label: "Adaptive Force",
+        value: "StatModsAdaptiveForceIcon"
     },
     {
-        label: 'Attack Speed',
-        value: 'StatModsAttackSpeedIcon'
+        label: "Attack Speed",
+        value: "StatModsAttackSpeedIcon"
     },
     {
-        label: 'Ability Haste (CDR)',
-        value: 'StatModsCDRScalingIcon'
+        label: "Ability Haste (CDR)",
+        value: "StatModsCDRScalingIcon"
     }
 ];
 const SHARD_ROW_2 = [
     {
-        label: 'Adaptive Force',
-        value: 'StatModsAdaptiveForceIcon'
+        label: "Adaptive Force",
+        value: "StatModsAdaptiveForceIcon"
     },
     {
-        label: 'Movement Speed',
-        value: 'StatModsMoveSpeedIcon'
+        label: "Movement Speed",
+        value: "StatModsMoveSpeedIcon"
     },
     {
-        label: 'Health',
-        value: 'StatModsHealthScalingIcon'
+        label: "Health",
+        value: "StatModsHealthScalingIcon"
     }
 ];
 const SHARD_ROW_3 = [
     {
-        label: 'Health',
-        value: 'StatModsHealthScalingIcon'
+        label: "Health",
+        value: "StatModsHealthScalingIcon"
     },
     {
-        label: 'Magic Resist',
-        value: 'StatModsMagicResIcon'
+        label: "Magic Resist",
+        value: "StatModsMagicResIcon"
     },
     {
-        label: 'Armor',
-        value: 'StatModsArmorIcon'
+        label: "Armor",
+        value: "StatModsArmorIcon"
     }
 ];
 function CreateBuildPage() {
     _s();
     const [form, setForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
-        name: '',
-        description: '',
-        role: '',
-        champion: null,
-        keystone: '',
-        primary_slot1: '',
-        primary_slot2: '',
-        primary_slot3: '',
-        secondary_path: '',
-        secondary_slot1: '',
-        secondary_slot2: '',
-        shard_offense: '',
-        shard_flex: '',
-        shard_defense: ''
+        name: "",
+        description: "",
+        role: "",
+        champion_name: "",
+        primary_path: "",
+        keystone: "",
+        primary_slot1: "",
+        primary_slot2: "",
+        primary_slot3: "",
+        secondary_path: "",
+        secondary_slot1: "",
+        secondary_slot2: "",
+        shard_offense: "",
+        shard_flex: "",
+        shard_defense: ""
     });
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [message, setMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
@@ -91,12 +92,12 @@ function CreateBuildPage() {
     const [filteredChampions, setFilteredChampions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [showSuggestions, setShowSuggestions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [runes, setRunes] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [selectedChampionName, setSelectedChampionName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const handleSubmit = async (e)=>{
         e.preventDefault();
         const token = localStorage.getItem("access");
         if (!token) return setError("Not authenticated.");
+        if (!form.champion_name) return setError("Please select a champion.");
         try {
             await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post("http://127.0.0.1:8000/api/builds/create/", form, {
                 headers: {
@@ -108,7 +109,7 @@ function CreateBuildPage() {
         } catch (err) {
             if (err.response) {
                 console.error("API Error:", err.response.data);
-                setError(JSON.stringify(err.response.data));
+                setError(`Erreur API : ${JSON.stringify(err.response.data)}`);
             } else {
                 setError("Unknown error");
                 console.error(err);
@@ -133,11 +134,9 @@ function CreateBuildPage() {
             fetchRunes();
         }
     }["CreateBuildPage.useEffect"], []);
-    const secondaryBranches = runes.filter((r)=>r.name !== form.keystone);
-    const primary = runes.find((r)=>r.name === form.keystone);
-    const validPrimarySlots = primary ? primary.slots : [];
+    const primary = runes.find((r)=>r.name === form.primary_path);
     const secondary = runes.find((r)=>r.name === form.secondary_path);
-    const validSecondarySlots = secondary ? secondary.slots.slice(1) : [];
+    const secondaryBranches = runes.filter((r)=>r.name !== form.primary_path);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "max-w-3xl mx-auto p-4 text-white",
         children: [
@@ -146,7 +145,7 @@ function CreateBuildPage() {
                 children: "Create a New Build"
             }, void 0, false, {
                 fileName: "[project]/app/create-build/page.tsx",
-                lineNumber: 117,
+                lineNumber: 101,
                 columnNumber: 7
             }, this),
             message && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -154,7 +153,7 @@ function CreateBuildPage() {
                 children: message
             }, void 0, false, {
                 fileName: "[project]/app/create-build/page.tsx",
-                lineNumber: 118,
+                lineNumber: 102,
                 columnNumber: 19
             }, this),
             error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -162,7 +161,7 @@ function CreateBuildPage() {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/app/create-build/page.tsx",
-                lineNumber: 119,
+                lineNumber: 103,
                 columnNumber: 17
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -173,7 +172,7 @@ function CreateBuildPage() {
                         type: "text",
                         name: "name",
                         placeholder: "Build name",
-                        value: form.name ?? '',
+                        value: form.name,
                         onChange: (e)=>setForm((prev)=>({
                                     ...prev,
                                     name: e.target.value
@@ -181,13 +180,13 @@ function CreateBuildPage() {
                         className: "w-full p-2 bg-gray-800 rounded"
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 122,
+                        lineNumber: 106,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
                         name: "description",
                         placeholder: "Description (HTML allowed)",
-                        value: form.description ?? '',
+                        value: form.description,
                         onChange: (e)=>setForm((prev)=>({
                                     ...prev,
                                     description: e.target.value
@@ -195,12 +194,12 @@ function CreateBuildPage() {
                         className: "w-full p-2 bg-gray-800 rounded h-32"
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 130,
+                        lineNumber: 115,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                         name: "role",
-                        value: form.role ?? '',
+                        value: form.role,
                         onChange: (e)=>setForm((prev)=>({
                                     ...prev,
                                     role: e.target.value
@@ -212,7 +211,7 @@ function CreateBuildPage() {
                                 children: "Select Role"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 144,
+                                lineNumber: 129,
                                 columnNumber: 11
                             }, this),
                             ROLES.map((role)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -220,13 +219,13 @@ function CreateBuildPage() {
                                     children: role
                                 }, role, false, {
                                     fileName: "[project]/app/create-build/page.tsx",
-                                    lineNumber: 146,
+                                    lineNumber: 131,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 138,
+                        lineNumber: 123,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -234,24 +233,22 @@ function CreateBuildPage() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 type: "text",
-                                name: "champion",
-                                placeholder: "Champion name (e.g. Ahri)",
-                                value: selectedChampionName,
+                                name: "champion_name",
+                                placeholder: "Champion name",
+                                value: form.champion_name,
                                 onChange: (e)=>{
                                     const value = e.target.value;
-                                    setSelectedChampionName(value);
-                                    setShowSuggestions(true);
-                                    const matches = champions.filter((c)=>c.name.toLowerCase().includes(value.toLowerCase()));
-                                    setFilteredChampions(matches);
                                     setForm((prev)=>({
                                             ...prev,
-                                            champion: null
+                                            champion_name: value
                                         }));
+                                    setShowSuggestions(true);
+                                    setFilteredChampions(champions.filter((c)=>c.name.toLowerCase().includes(value.toLowerCase())));
                                 },
                                 className: "w-full p-2 bg-gray-800 rounded"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 151,
+                                lineNumber: 137,
                                 columnNumber: 11
                             }, this),
                             showSuggestions && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -260,9 +257,8 @@ function CreateBuildPage() {
                                         onClick: ()=>{
                                             setForm((prev)=>({
                                                     ...prev,
-                                                    champion: c.key
+                                                    champion_name: c.name
                                                 }));
-                                            setSelectedChampionName(c.name);
                                             setShowSuggestions(false);
                                         },
                                         className: "flex items-center p-2 hover:bg-gray-700 cursor-pointer",
@@ -273,36 +269,71 @@ function CreateBuildPage() {
                                                 className: "w-6 h-6 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/create-build/page.tsx",
-                                                lineNumber: 180,
+                                                lineNumber: 165,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: c.name
                                             }, void 0, false, {
                                                 fileName: "[project]/app/create-build/page.tsx",
-                                                lineNumber: 185,
+                                                lineNumber: 170,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, c.id, true, {
                                         fileName: "[project]/app/create-build/page.tsx",
-                                        lineNumber: 171,
+                                        lineNumber: 157,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 169,
+                                lineNumber: 155,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 150,
+                        lineNumber: 136,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                        name: "primary_path",
+                        value: form.primary_path,
+                        onChange: (e)=>setForm((prev)=>({
+                                    ...prev,
+                                    primary_path: e.target.value,
+                                    keystone: "",
+                                    primary_slot1: "",
+                                    primary_slot2: "",
+                                    primary_slot3: ""
+                                })),
+                        className: "w-full p-2 bg-gray-800 rounded",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                value: "",
+                                children: "Select Primary Path"
+                            }, void 0, false, {
+                                fileName: "[project]/app/create-build/page.tsx",
+                                lineNumber: 193,
+                                columnNumber: 11
+                            }, this),
+                            runes.map((r)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                    value: r.name,
+                                    children: r.name
+                                }, r.id, false, {
+                                    fileName: "[project]/app/create-build/page.tsx",
+                                    lineNumber: 195,
+                                    columnNumber: 13
+                                }, this))
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/create-build/page.tsx",
+                        lineNumber: 178,
+                        columnNumber: 9
+                    }, this),
+                    primary && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                         name: "keystone",
-                        value: form.keystone ?? '',
+                        value: form.keystone,
                         onChange: (e)=>setForm((prev)=>({
                                     ...prev,
                                     keystone: e.target.value
@@ -311,73 +342,74 @@ function CreateBuildPage() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                 value: "",
-                                children: "Select Keystone Path"
+                                children: "Select Keystone"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 198,
-                                columnNumber: 11
+                                lineNumber: 209,
+                                columnNumber: 13
                             }, this),
-                            runes.map((path)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                    value: path.name,
-                                    children: path.name
-                                }, path.id, false, {
+                            primary.slots[0]?.runes.map((rune)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                    value: rune.name,
+                                    children: rune.name
+                                }, rune.id, false, {
                                     fileName: "[project]/app/create-build/page.tsx",
-                                    lineNumber: 200,
-                                    columnNumber: 13
+                                    lineNumber: 211,
+                                    columnNumber: 15
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 192,
-                        columnNumber: 9
+                        lineNumber: 203,
+                        columnNumber: 11
                     }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    primary && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "grid grid-cols-1 sm:grid-cols-3 gap-2",
-                        children: validPrimarySlots.map((slot, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                name: `primary_slot${idx + 1}`,
-                                value: form[`primary_slot${idx + 1}`] ?? '',
+                        children: primary.slots.slice(1).map((slot, idx)=>{
+                            const field = `primary_slot${idx + 1}`;
+                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                value: form[field],
                                 onChange: (e)=>setForm((prev)=>({
                                             ...prev,
-                                            [`primary_slot${idx + 1}`]: e.target.value
+                                            [field]: e.target.value
                                         })),
                                 className: "p-2 bg-gray-800 rounded",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                         value: "",
-                                        children: [
-                                            "Primary Slot ",
-                                            idx + 1
-                                        ]
-                                    }, void 0, true, {
+                                        children: `Primary Slot ${idx + 1}`
+                                    }, void 0, false, {
                                         fileName: "[project]/app/create-build/page.tsx",
-                                        lineNumber: 213,
-                                        columnNumber: 15
+                                        lineNumber: 235,
+                                        columnNumber: 19
                                     }, this),
                                     slot.runes.map((rune)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                             value: rune.name,
                                             children: rune.name
                                         }, rune.id, false, {
                                             fileName: "[project]/app/create-build/page.tsx",
-                                            lineNumber: 215,
-                                            columnNumber: 17
+                                            lineNumber: 237,
+                                            columnNumber: 21
                                         }, this))
                                 ]
                             }, idx, true, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 206,
-                                columnNumber: 13
-                            }, this))
+                                lineNumber: 224,
+                                columnNumber: 17
+                            }, this);
+                        })
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 204,
-                        columnNumber: 9
+                        lineNumber: 220,
+                        columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                         name: "secondary_path",
-                        value: form.secondary_path ?? '',
+                        value: form.secondary_path,
                         onChange: (e)=>setForm((prev)=>({
                                     ...prev,
-                                    secondary_path: e.target.value
+                                    secondary_path: e.target.value,
+                                    secondary_slot1: "",
+                                    secondary_slot2: ""
                                 })),
                         className: "w-full p-2 bg-gray-800 rounded",
                         children: [
@@ -386,31 +418,33 @@ function CreateBuildPage() {
                                 children: "Select Secondary Path"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 227,
+                                lineNumber: 261,
                                 columnNumber: 11
                             }, this),
-                            secondaryBranches.map((path)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                    value: path.name,
-                                    children: path.name
-                                }, path.id, false, {
+                            secondaryBranches.map((r)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                    value: r.name,
+                                    children: r.name
+                                }, r.id, false, {
                                     fileName: "[project]/app/create-build/page.tsx",
-                                    lineNumber: 229,
+                                    lineNumber: 263,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 221,
+                        lineNumber: 248,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "grid grid-cols-1 sm:grid-cols-2 gap-2",
-                        children: validSecondarySlots.map((slot, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                name: `secondary_slot${idx + 1}`,
-                                value: form[`secondary_slot${idx + 1}`] ?? '',
+                        children: [
+                            1,
+                            2
+                        ].map((idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                value: form[`secondary_slot${idx}`],
                                 onChange: (e)=>setForm((prev)=>({
                                             ...prev,
-                                            [`secondary_slot${idx + 1}`]: e.target.value
+                                            [`secondary_slot${idx}`]: e.target.value
                                         })),
                                 className: "p-2 bg-gray-800 rounded",
                                 children: [
@@ -418,30 +452,30 @@ function CreateBuildPage() {
                                         value: "",
                                         children: [
                                             "Secondary Slot ",
-                                            idx + 1
+                                            idx
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/create-build/page.tsx",
-                                        lineNumber: 242,
+                                        lineNumber: 283,
                                         columnNumber: 15
                                     }, this),
-                                    slot.runes.map((rune)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                    secondary?.slots.slice(1).flatMap((slot)=>slot.runes).map((rune)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                             value: rune.name,
                                             children: rune.name
                                         }, rune.id, false, {
                                             fileName: "[project]/app/create-build/page.tsx",
-                                            lineNumber: 244,
-                                            columnNumber: 17
+                                            lineNumber: 288,
+                                            columnNumber: 19
                                         }, this))
                                 ]
                             }, idx, true, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 235,
+                                lineNumber: 272,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 233,
+                        lineNumber: 270,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -449,30 +483,23 @@ function CreateBuildPage() {
                         children: "Select Shards"
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 250,
+                        lineNumber: 297,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "grid grid-cols-1 sm:grid-cols-3 gap-2",
                         children: [
-                            {
-                                name: "shard_offense",
-                                label: "Shard 1 (Offense)",
-                                options: SHARD_ROW_1
-                            },
-                            {
-                                name: "shard_flex",
-                                label: "Shard 2 (Flex)",
-                                options: SHARD_ROW_2
-                            },
-                            {
-                                name: "shard_defense",
-                                label: "Shard 3 (Defense)",
-                                options: SHARD_ROW_3
-                            }
-                        ].map(({ name, label, options })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                name: name,
-                                value: form[name] ?? '',
+                            SHARD_ROW_1,
+                            SHARD_ROW_2,
+                            SHARD_ROW_3
+                        ].map((row, i)=>{
+                            const name = [
+                                "shard_offense",
+                                "shard_flex",
+                                "shard_defense"
+                            ][i];
+                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                value: form[name],
                                 onChange: (e)=>setForm((prev)=>({
                                             ...prev,
                                             [name]: e.target.value
@@ -481,29 +508,30 @@ function CreateBuildPage() {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                         value: "",
-                                        children: label
+                                        children: `Shard ${i + 1}`
                                     }, void 0, false, {
                                         fileName: "[project]/app/create-build/page.tsx",
-                                        lineNumber: 266,
-                                        columnNumber: 15
+                                        lineNumber: 310,
+                                        columnNumber: 17
                                     }, this),
-                                    options.map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                    row.map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                             value: s.value,
                                             children: s.label
                                         }, s.value, false, {
                                             fileName: "[project]/app/create-build/page.tsx",
-                                            lineNumber: 268,
-                                            columnNumber: 17
+                                            lineNumber: 312,
+                                            columnNumber: 19
                                         }, this))
                                 ]
                             }, name, true, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 259,
-                                columnNumber: 13
-                            }, this))
+                                lineNumber: 302,
+                                columnNumber: 15
+                            }, this);
+                        })
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 251,
+                        lineNumber: 298,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -512,23 +540,23 @@ function CreateBuildPage() {
                         children: "Create Build"
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 274,
+                        lineNumber: 321,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/create-build/page.tsx",
-                lineNumber: 121,
+                lineNumber: 105,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/create-build/page.tsx",
-        lineNumber: 116,
+        lineNumber: 100,
         columnNumber: 5
     }, this);
 }
-_s(CreateBuildPage, "Ac43QHsWrtcQFycg8f4RUtupcbo=", false, function() {
+_s(CreateBuildPage, "47j6QCe2/Sg6hHG/GGetro3DlBk=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];
