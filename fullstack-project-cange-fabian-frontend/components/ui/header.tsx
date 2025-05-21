@@ -4,20 +4,40 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { jwtDecode } from 'jwt-decode'
+
+interface DecodedToken {
+  username: string
+  is_superuser: boolean
+  role: string
+}
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isRedacteur, setIsRedacteur] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     const token = localStorage.getItem('access')
-    setIsLoggedIn(!!token)
+    const role = localStorage.getItem("role")
+    if (token) {
+      setIsLoggedIn(!!token)
+      try {
+        const decoded: DecodedToken = jwtDecode(token)
+        if (role === "Redacteur") {
+          setIsRedacteur(true)
+        }
+      } catch (err) {
+        console.error('Invalid token')
+      }
+    }
   }, [])
 
   const handleLogout = () => {
     localStorage.removeItem('access')
     localStorage.removeItem('refresh')
     setIsLoggedIn(false)
+    setIsRedacteur(false)
     router.push('/')
   }
 
@@ -39,7 +59,7 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Auth */}
+          {/* Auth / Actions */}
           <ul className="flex flex-1 items-center justify-end gap-3">
             {isLoggedIn ? (
               <>
@@ -51,6 +71,16 @@ export default function Header() {
                     Create Build
                   </Link>
                 </li>
+                {isRedacteur && (
+                  <li>
+                    <Link
+                      href="/articles/create"
+                      className="btn-sm bg-blue-600 hover:bg-blue-700 py-[5px] px-4 text-white rounded"
+                    >
+                      Create Article
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <button
                     onClick={handleLogout}

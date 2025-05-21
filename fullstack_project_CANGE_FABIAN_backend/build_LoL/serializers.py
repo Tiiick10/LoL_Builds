@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import Champion, Build, AvisBuild, Article, Rune
 
 # User
@@ -167,3 +168,20 @@ class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = '__all__'
+        read_only_fields = ['auteur']
+
+# Token
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
+
+        data['username'] = user.username
+        data['is_superuser'] = user.is_superuser
+        data['role'] = (
+            'Admin' if user.is_superuser else
+            'Redacteur' if user.groups.filter(name='Rédacteur').exists() else
+            'User'
+        )
+        return data
