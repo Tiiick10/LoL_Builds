@@ -30,13 +30,16 @@ class Build(models.Model):
     ]
 
     SHARD_CHOICES = [
-        ('adaptive_force', 'Adaptive Force'),
-        ('attack_speed', 'Attack Speed'),
-        ('ability_haste', 'Ability Haste'),
-        ('movement_speed', 'Movement Speed'),
-        ('bonus_health', 'Bonus Health'),
-        ('tenacity', 'Tenacity and Slow Resist'),
+    ('StatModsAdaptiveForceIcon', 'Adaptive Force'),
+    ('StatModsArmorIcon', 'Armor'),
+    ('StatModsAttackSpeedIcon', 'Attack Speed'),
+    ('StatModsCDRScalingIcon', 'Ability Haste'),
+    ('StatModsHealthScalingIcon', 'Bonus Health'),
+    ('StatModsMagicResIcon', 'Magic Resist'),
+    ('StatModsMoveSpeedIcon', 'Movement Speed'),
     ]
+
+
 
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -57,9 +60,11 @@ class Build(models.Model):
     secondary_slot2 = models.CharField(max_length=50, blank=True, null=True)
 
     # Shards
-    shard_offense = models.CharField(max_length=30, choices=SHARD_CHOICES, blank=True, null=True)
-    shard_flex = models.CharField(max_length=30, choices=SHARD_CHOICES, blank=True, null=True)
-    shard_defense = models.CharField(max_length=30, choices=SHARD_CHOICES, blank=True, null=True)
+    shard_offense = models.CharField(max_length=64, choices=SHARD_CHOICES, default='StatModsAdaptiveForceIcon')
+    shard_flex = models.CharField(max_length=64, choices=SHARD_CHOICES, default='StatModsAdaptiveForceIcon')
+    shard_defense = models.CharField( max_length=64, choices=SHARD_CHOICES, default='StatModsArmorIcon')
+
+
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -119,18 +124,6 @@ class Rune(models.Model):
 
     def __str__(self):
         return self.name
-
-    
-class AvisBuild(models.Model):
-    build = models.ForeignKey('Build', on_delete=models.CASCADE, related_name='avis')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    positif = models.BooleanField()
-    commentaire = models.TextField(blank=True)
-    date_poste = models.DateTimeField(auto_now_add=True)
-    banned = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Avis de {self.author.username} sur {self.build.name}"
 
 
 class Article(models.Model):

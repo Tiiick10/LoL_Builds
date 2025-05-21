@@ -1,159 +1,130 @@
-import { BsHandThumbsUp, BsHandThumbsDown } from "react-icons/bs"
+'use client'
+
+import React from "react"
+import Tilt from 'react-parallax-tilt'
+import { useRouter } from 'next/navigation'
 
 interface Build {
   id: number
   name: string
-  role: string
-  description?: string
-  author?: string
-  avis_positif: number
-  avis_negatif: number
-  champion?: {
+  champion: {
     name: string
-    image_url: string
   }
-  keystone: string
-  keystone_icon_url: string
-  primary_slot1_icon_url: string
-  primary_slot2_icon_url: string
-  primary_slot3_icon_url: string
-  secondary_slot1_icon_url: string
-  secondary_slot2_icon_url: string
+  primary_path: string
+  primary_path_icon_url: string
   primary_slot1: string
+  primary_slot1_icon_url: string
   primary_slot2: string
+  primary_slot2_icon_url: string
   primary_slot3: string
-  secondary_slot1: string
-  secondary_slot2: string
+  primary_slot3_icon_url: string
   secondary_path: string
   secondary_path_icon_url: string
-  shard_offense: string
-  shard_flex: string
-  shard_defense: string
-  shard_offense_icon_url: string
-  shard_flex_icon_url: string
-  shard_defense_icon_url: string
+  secondary_slot1: string
+  secondary_slot1_icon_url: string
+  secondary_slot2: string
+  secondary_slot2_icon_url: string
 }
+
 
 interface Props {
   build: Build
 }
 
 export default function BuildsCard({ build }: Props) {
-  const imageUrl =
-    build?.champion?.image_url || "https://via.placeholder.com/64x64?text=?"
+  const splashUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${build.champion.name}_0.jpg`
+  const router = useRouter()
 
-  const shards = ["shard_offense", "shard_flex", "shard_defense"].map((key) => ({
-    icon: build[`${key}_icon_url` as keyof Build] as string,
-    name: build[key as keyof Build] as string,
-  }))
+  const goToDetail = () => {
+    router.push(`/builds/${build.id}`)
+  }
+
+  const fallback = (name?: string) => {
+    if (!name || typeof name !== 'string') return ''
+    return `/images/custom-runes/${name.replace(/ /g, '').replace(':', '').replace("'", '')}.png`
+  }
 
   return (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all">
-      {/* Header section */}
-      <div className="flex items-center space-x-4">
-        <img
-          src={imageUrl}
-          alt={build.champion?.name || "Champion"}
-          className="w-24 h-24 rounded-full object-cover"
-        />
-        <div className="flex-1">
-          <h3 className="text-white text-2xl font-bold">{build.name}</h3>
-          <p className="text-gray-400 text-sm capitalize">{build.role}</p>
-          <p className="text-gray-300 text-xs mt-1">
-            Author: {build.author || "Unknown"}
-          </p>
-          <p className="text-xs text-gray-400 flex gap-2 items-center">
-            <BsHandThumbsUp /> {build.avis_positif} / <BsHandThumbsDown />{" "}
-            {build.avis_negatif}
-          </p>
-        </div>
-        <div className="ml-4 text-center">
-          <img
-            src={build.keystone_icon_url}
-            alt="Keystone"
-            className="w-10 h-10 object-contain mx-auto"
-          />
-          <span className="text-indigo-400 text-xs">{build.keystone}</span>
-        </div>
-      </div>
+    <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} glareEnable={false} className="rounded-xl">
+      <div
+        className="rounded-xl p-4 text-white shadow-lg bg-cover bg-center relative"
+        style={{
+          backgroundImage: `url(${splashUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          width: "60%",
+          height: "60vh",
+        }}
+      >
+        <div className="absolute inset-0 bg-black opacity-60 rounded-xl"></div>
 
-      {/* Primary Runes */}
-      <div className="mt-4">
-        <h4 className="text-white font-semibold mb-2">Primary Runes</h4>
-        <div className="flex gap-4">
-          {[1, 2, 3].map((i) => {
-            const key = `primary_slot${i}_icon_url` as keyof Build
-            const alt = `primary_slot${i}` as keyof Build
-            return (
-              build[key] && (
+        <div className="relative z-10 flex flex-col h-full justify-between">
+          <div className="text-center mt-2 mb-20">
+            <h1 className="text-2xl font-bold">{build.name}</h1>
+          </div>
+
+          <div className="flex items-center gap-5 mt-4">
+            <img
+              src={build.primary_path_icon_url || fallback(build.primary_path)}
+              alt={build.primary_path}
+              className="w-8 h-8"
+              onError={(e) => { e.currentTarget.src = fallback(build.primary_path) }}
+            />
+            <span className="text-2xl">{build.primary_path}</span>
+          </div>
+
+          <div className="flex gap-5 ms-10 mt-2">
+            {[1, 2, 3].map((i) => {
+              const iconKey = `primary_slot${i}_icon_url` as keyof Build
+              const nameKey = `primary_slot${i}` as keyof Build
+              return (
                 <img
                   key={i}
-                  src={build[key] as string}
-                  alt={build[alt] as string}
-                  className="w-8 h-8 object-contain"
+                  src={build[iconKey] as string || fallback(build[nameKey] as string)}
+                  alt={`Primary Rune ${i}`}
+                  className="w-10 h-10"
+                  onError={(e) => { e.currentTarget.src = fallback(build[nameKey] as string | undefined) }}
                 />
               )
-            )
-          })}
+            })}
+          </div>
+
+          <div className="flex items-center gap-5 mt-6">
+            <img
+              src={build.secondary_path_icon_url || fallback(build.secondary_path)}
+              alt={build.secondary_path}
+              className="w-8 h-8"
+              onError={(e) => { e.currentTarget.src = fallback(build.secondary_path) }}
+            />
+            <span className="text-2xl">{build.secondary_path}</span>
+          </div>
+
+          <div className="flex gap-5 ms-10 mt-2 mb-8">
+            {[1, 2].map((i) => {
+              const iconKey = `secondary_slot${i}_icon_url` as keyof Build
+              const nameKey = `secondary_slot${i}` as keyof Build
+              return (
+                <img
+                  key={i}
+                  src={build[iconKey] as string || fallback(build[nameKey] as string)}
+                  alt={`Secondary Rune ${i}`}
+                  className="w-10 h-10"
+                  onError={(e) => { e.currentTarget.src = fallback(build[nameKey] as string | undefined) }}
+                />
+              )
+            })}
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={goToDetail}
+              className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer text-white text-sm px-4 py-2 rounded-md transition duration-200"
+            >
+              See the build
+            </button>
+          </div>
         </div>
       </div>
-
-      {/* Secondary Runes */}
-      <div className="mt-4">
-  <h4 className="text-white font-semibold mb-2">Secondary Runes</h4>
-
-  {build.secondary_path_icon_url && (
-    <div className="flex items-center gap-2 mb-2">
-      <img
-        src={build.secondary_path_icon_url}
-        alt={build.secondary_path}
-        className="w-6 h-6 object-contain"
-      />
-      <span className="text-indigo-300 text-sm">{build.secondary_path}</span>
-    </div>
-  )}
-
-  <div className="flex gap-4">
-    {[1, 2].map((i) => {
-      const key = `secondary_slot${i}_icon_url` as keyof Build
-      const alt = `secondary_slot${i}` as keyof Build
-      return (
-        build[key] && (
-          <img
-            key={i}
-            src={build[key] as string}
-            alt={build[alt] as string}
-            className="w-8 h-8 object-contain"
-          />
-        )
-      )
-    })}
-  </div>
-</div>
-
-
-      {/* Shards */}
-      <div className="mt-4">
-        <h4 className="text-white font-semibold mb-2">Shards</h4>
-        <div className="flex gap-4">
-          {shards.map((shard, i) =>
-            shard.icon ? (
-              <img
-                key={i}
-                src={shard.icon}
-                alt={shard.name}
-                className="w-6 h-6 object-contain"
-              />
-            ) : null
-          )}
-        </div>
-      </div>
-
-      {/* Description */}
-      <div className="mt-4">
-        <h4 className="text-white font-semibold mb-2">Description</h4>
-        <p className="text-gray-400 text-sm">{build.description}</p>
-      </div>
-    </div>
+    </Tilt>
   )
 }

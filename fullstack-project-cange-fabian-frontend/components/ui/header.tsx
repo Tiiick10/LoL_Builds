@@ -1,39 +1,118 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import Logo from "./logo";
+import Link from 'next/link'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { jwtDecode } from 'jwt-decode'
+
+interface DecodedToken {
+  username: string
+  is_superuser: boolean
+  role: string
+}
 
 export default function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isRedacteur, setIsRedacteur] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = localStorage.getItem('access')
+    const role = localStorage.getItem("role")
+    if (token) {
+      setIsLoggedIn(!!token)
+      try {
+        const decoded: DecodedToken = jwtDecode(token)
+        if (role === "Redacteur") {
+          setIsRedacteur(true)
+        }
+      } catch (err) {
+        console.error('Invalid token')
+      }
+    }
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+    setIsLoggedIn(false)
+    setIsRedacteur(false)
+    router.push('/')
+  }
+
   return (
     <header className="z-30 mt-2 w-full md:mt-5">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="relative flex h-14 items-center justify-between gap-3 rounded-2xl bg-gray-900/90 px-3 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] after:absolute after:inset-0 after:-z-10 after:backdrop-blur-xs">
-          {/* Site branding */}
-          <div className="flex flex-1 items-center">
-            <Logo />
+
+          {/* Logo / Home */}
+          <div className="flex mt-7">
+            <Link href="/" className="cursor-pointer">
+              <Image
+                src="/images/logo.svg"
+                width={75}
+                height={75}
+                alt="Logo"
+                className="object-contain"
+              />
+            </Link>
           </div>
 
-          {/* Desktop sign in links */}
+          {/* Auth / Actions */}
           <ul className="flex flex-1 items-center justify-end gap-3">
-            <li>
-              <Link
-                href="/signin"
-                className="btn-sm relative bg-linear-to-b from-gray-800 to-gray-800/60 bg-[length:100%_100%] bg-[bottom] py-[5px] text-gray-300 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] hover:bg-[length:100%_150%]"
-              >
-                Sign In
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/signup"
-                className="btn-sm bg-linear-to-t from-indigo-600 to-indigo-500 bg-[length:100%_100%] bg-[bottom] py-[5px] text-white shadow-[inset_0px_1px_0px_0px_--theme(--color-white/.16)] hover:bg-[length:100%_150%]"
-              >
-                Register
-              </Link>
-            </li>
+            {isLoggedIn ? (
+              <>
+                <li>
+                  <Link
+                    href="/create-build"
+                    className="btn-sm bg-green-600 hover:bg-green-700 py-[5px] px-4 text-white rounded"
+                  >
+                    Create Build
+                  </Link>
+                </li>
+                {isRedacteur && (
+                  <li>
+                    <Link
+                      href="/articles/create"
+                      className="btn-sm bg-blue-600 hover:bg-blue-700 py-[5px] px-4 text-white rounded"
+                    >
+                      Create Article
+                    </Link>
+                  </li>
+                )}
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    className="btn-sm bg-red-600 hover:bg-red-700 py-[5px] px-4 text-white rounded"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    href="/login"
+                    className="btn-sm bg-gray-800 py-[5px] px-4 text-gray-300 rounded hover:bg-gray-700"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/register"
+                    className="btn-sm bg-indigo-600 py-[5px] px-4 text-white rounded hover:bg-indigo-700"
+                  >
+                    Register
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
     </header>
-  );
+  )
 }
