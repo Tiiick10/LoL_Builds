@@ -18,8 +18,8 @@ export default function HomePage() {
         setLatestBuilds(builds.slice(0, 5))
         setTopBuilds([...builds].sort((a, b) => (b.likes - b.dislikes) - (a.likes - a.dislikes)).slice(0, 5))
 
-        const articlesRes = await API.get('articles/')
-        setArticles(articlesRes.data.results.slice(0, 5))
+        const articlesRes = await API.get('articles/public/')
+        setArticles(articlesRes.data.slice(0, 5))
       } catch (err) {
         console.error("Error loading homepage data", err)
       }
@@ -32,7 +32,7 @@ export default function HomePage() {
       <HeroSection />
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">Derniers Builds</h2>
+        <h2 className="text-2xl font-bold mb-4">Latest Builds</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {latestBuilds.map((build: any) => (
             <BuildsCard key={build.id} build={build} />
@@ -41,7 +41,7 @@ export default function HomePage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">Builds Populaires</h2>
+        <h2 className="text-2xl font-bold mb-4">Popular Builds</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {topBuilds.map((build: any) => (
             <BuildsCard key={build.id} build={build} />
@@ -50,7 +50,7 @@ export default function HomePage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">Derniers Articles</h2>
+        <h2 className="text-2xl font-bold mb-4">Latest Articles</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article: any) => (
             <ArticleCard key={article.id} article={article} />
