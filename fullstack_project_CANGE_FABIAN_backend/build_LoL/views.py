@@ -1,24 +1,33 @@
 from rest_framework import generics, status, serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from .models import Champion, Build, AvisBuild, Article
 from .serializers import (
     ChampionSerializer, BuildSerializer, AvisBuildSerializer,
-    ArticleSerializer, BuildListSerializer
+    ArticleSerializer, BuildListSerializer, CustomTokenObtainPairSerializer,
+    UserSerializer
 )
 from .permissions import IsRedacteur, IsUtilisateur, IsOwnerOrReadOnly
-from datetime import timedelta
 import re
 
 # Create your views here.
+
+class UserDetailView(RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = "id"
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -49,9 +58,6 @@ def custom_login_view(request):
         "is_superuser": user.is_superuser,
         "role": role,
     })
-
-
-
 
 # ---- #
 # AUTH #
@@ -127,12 +133,10 @@ class BuildListCreateView(generics.ListCreateAPIView):
             secondary_path=self.request.data.get("secondary_path")
             )   
 
-class BuildDetailView(RetrieveAPIView):
+class BuildDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Build.objects.all()
     serializer_class = BuildSerializer
-
-    def get_serializer_context(self):
-        return {'request': self.request}
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class BuildDeleteView(generics.DestroyAPIView):
     queryset = Build.objects.all()

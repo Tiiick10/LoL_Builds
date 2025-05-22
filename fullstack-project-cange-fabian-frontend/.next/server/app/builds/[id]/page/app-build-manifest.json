@@ -2,8 +2,8 @@
   "pages": {
     "/builds/[id]/page": [
       "static/chunks/[root-of-the-server]__642d323d._.css",
-      "static/chunks/node_modules_e80b193b._.js",
-      "static/chunks/components_ui_header_tsx_c235b5d3._.js",
+      "static/chunks/node_modules_a8259fcf._.js",
+      "static/chunks/components_648fdc88._.js",
       "static/chunks/app_layout_tsx_ea9287a8._.js",
       "static/chunks/node_modules_axios_lib_99999129._.js",
       "static/chunks/node_modules_react-icons_bs_index_mjs_0b2b1793._.js",
@@ -11,7 +11,7 @@
       "static/chunks/node_modules_react-icons_lib_74ccc930._.js",
       "static/chunks/node_modules_next_dist_compiled_buffer_index_feebad72.js",
       "static/chunks/_12ba30b7._.js",
-      "static/chunks/app_builds_[id]_page_tsx_4cd03f23._.js",
+      "static/chunks/app_builds_[id]_page_tsx_0e93153f._.js",
       "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_c20f642f._.js",
       "static/chunks/node_modules_next_dist_compiled_2ce9398a._.js",
       "static/chunks/node_modules_next_dist_client_8f19e6fb._.js",

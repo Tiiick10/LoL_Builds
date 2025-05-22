@@ -1,8 +1,8 @@
 'use client'
 
 import React from "react"
-import Tilt from 'react-parallax-tilt'
 import { useRouter } from 'next/navigation'
+import { motion } from "framer-motion"
 
 interface Build {
   id: number
@@ -26,7 +26,6 @@ interface Build {
   secondary_slot2_icon_url: string
 }
 
-
 interface Props {
   build: Build
 }
@@ -45,17 +44,17 @@ export default function BuildsCard({ build }: Props) {
   }
 
   return (
-    <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} glareEnable={false} className="rounded-xl">
-      <div
-        className="rounded-xl p-4 text-white shadow-lg bg-cover bg-center relative"
+    <motion.div
+      whileHover={{ scale: 1.03, rotate: 1 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+      className="rounded-xl"
+    >
+      <div className="rounded-xl p-4 text-white shadow-lg bg-cover bg-center relative w-full max-w-[400px] h-[600px] overflow-hidden"
         style={{
           backgroundImage: `url(${splashUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          width: "60%",
-          height: "60vh",
-        }}
-      >
+        }}>
+
         <div className="absolute inset-0 bg-black opacity-60 rounded-xl"></div>
 
         <div className="relative z-10 flex flex-col h-full justify-between">
@@ -125,6 +124,6 @@ export default function BuildsCard({ build }: Props) {
           </div>
         </div>
       </div>
-    </Tilt>
+    </motion.div>
   )
 }

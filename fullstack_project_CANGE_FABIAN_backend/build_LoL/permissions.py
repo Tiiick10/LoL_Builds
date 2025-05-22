@@ -10,7 +10,10 @@ class IsUtilisateur(BasePermission):
 
 class IsRedacteur(BasePermission):
     def has_permission(self, request, view):
-        return request.user and request.user.groups.filter(name="Redac").exists()
+        return request.user and (
+            request.user.is_superuser or
+            request.user.groups.filter(name="Rédacteur").exists()
+        )
 
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):

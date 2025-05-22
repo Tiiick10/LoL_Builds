@@ -19,8 +19,9 @@ export default function LoginPage() {
 
       localStorage.setItem('access', res.data.access)
       localStorage.setItem('refresh', res.data.refresh)
-      localStorage.setItem('is_admin', res.data.is_superuser)  // facultatif pour frontend
+      localStorage.setItem('is_superuser', res.data.is_superuser)
       localStorage.setItem('role', res.data.role)
+      localStorage.setItem('username', res.data.username)
 
       router.push('/')
       setTimeout(() => {

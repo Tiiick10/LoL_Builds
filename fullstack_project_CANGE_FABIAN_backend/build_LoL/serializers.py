@@ -8,7 +8,7 @@ from .models import Champion, Build, AvisBuild, Article, Rune
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username']
+        fields = ["id", "username", "is_superuser"]
 
 # Champion
 
@@ -165,6 +165,8 @@ class BuildListSerializer(serializers.ModelSerializer):
 # Article
 
 class ArticleSerializer(serializers.ModelSerializer):
+    auteur = serializers.CharField(source='auteur.username', read_only=True)
+
     class Meta:
         model = Article
         fields = '__all__'
@@ -172,10 +174,30 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 # Token
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Token fields
+
+        token['username'] = user.username
+        token['is_superuser'] = user.is_superuser
+        token['role'] = (
+            'Admin' if user.is_superuser else
+            'Redacteur' if user.groups.filter(name='Rédacteur').exists() else
+            'User'
+        )
+
+        return token
+
     def validate(self, attrs):
         data = super().validate(attrs)
         user = self.user
+
+        # JSON Response
 
         data['username'] = user.username
         data['is_superuser'] = user.is_superuser
@@ -184,4 +206,5 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'Redacteur' if user.groups.filter(name='Rédacteur').exists() else
             'User'
         )
+
         return data

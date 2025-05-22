@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
 from .views import (
     # Champion
     ChampionListView,
@@ -30,6 +31,10 @@ from .views import (
 
     # Token Expiration
     custom_login_view,
+    CustomTokenObtainPairView,
+
+    # User
+    UserDetailView,
 )
 
 urlpatterns = [
@@ -68,8 +73,13 @@ urlpatterns = [
 
     path('register/', register_user, name='register'),
 
-    # Token Expiration
+    # Token / Toekn Expiration
 
     path('custom-login/', custom_login_view, name='custom-login'),
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    path("users/<int:id>/", UserDetailView.as_view(), name="user-detail"),
+
 
 ]

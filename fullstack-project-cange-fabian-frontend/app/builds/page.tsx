@@ -1,8 +1,12 @@
-'use client'
-import { useEffect, useState } from 'react'
-import API from '@/utils/axios'
-import Link from 'next/link'
-import { BsHandThumbsUp, BsHandThumbsDown, BsFillHouseDoorFill } from "react-icons/bs"
+"use client"
+import { useEffect, useState } from "react"
+import API from "@/utils/axios"
+import Link from "next/link"
+import {
+  BsHandThumbsUp,
+  BsHandThumbsDown,
+  BsFillHouseDoorFill,
+} from "react-icons/bs"
 
 interface Build {
   id: number
@@ -21,31 +25,31 @@ interface Build {
 
 export default function BuildsPage() {
   const [builds, setBuilds] = useState<Build[]>([])
-  const [roleFilter, setRoleFilter] = useState('')
-  const [championFilter, setChampionFilter] = useState('')
-  const [ordering, setOrdering] = useState('created_at')
+  const [roleFilter, setRoleFilter] = useState("")
+  const [championFilter, setChampionFilter] = useState("")
+  const [ordering, setOrdering] = useState("created_at")
   const [page, setPage] = useState(1)
 
   useEffect(() => {
-  const fetchBuilds = async () => {
-    try {
-      const res = await API.get('builds/', {
-        params: {
-          page,
-          role: roleFilter || undefined,
-          'champion__name': championFilter || undefined,
-          ordering
-        }
-      })
+    const fetchBuilds = async () => {
+      try {
+        const res = await API.get("builds/", {
+          params: {
+            page,
+            role: roleFilter || undefined,
+            champion__name: championFilter || undefined,
+            ordering,
+          },
+        })
 
-      const data = res.data.results || res.data
-      setBuilds(data)
-    } catch (err) {
-      console.error('Error fetching builds:', err)
+        const data = res.data.results || res.data
+        setBuilds(data)
+      } catch (err) {
+        console.error("Error fetching builds:", err)
+      }
     }
-  }
 
-  fetchBuilds()
+    fetchBuilds()
   }, [roleFilter, championFilter, ordering, page])
 
   return (
@@ -64,12 +68,14 @@ export default function BuildsPage() {
       {/* Filters */}
 
       <div className="flex flex-wrap gap-4 mb-6">
-        <select value={roleFilter} onChange={e => {
+        <select
+          value={roleFilter}
+          onChange={(e) => {
             setRoleFilter(e.target.value)
             setPage(1)
           }}
           className="bg-gray-800 px-4 py-2 rounded"
-        > 
+        >
           <option value="">All Roles</option>
           <option value="top">Top</option>
           <option value="jungle">Jungle</option>
@@ -82,23 +88,21 @@ export default function BuildsPage() {
           type="text"
           placeholder="Champion name"
           value={championFilter}
-          onChange={e => {
+          onChange={(e) => {
             setChampionFilter(e.target.value)
             setPage(1)
           }}
           className="bg-gray-800 px-4 py-2 rounded"
         />
 
-
         <select
           value={ordering}
-          onChange={e => {
+          onChange={(e) => {
             setOrdering(e.target.value)
             setPage(1)
           }}
           className="bg-gray-800 px-4 py-2 rounded"
         >
-
           <option value="created_at">Newest</option>
           <option value="-created_at">Oldest</option>
           <option value="most_liked">Most Liked</option>
@@ -107,25 +111,38 @@ export default function BuildsPage() {
 
       {/* Builds grid */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center">
         {builds.map((build) => (
-          <div key={build.id} className="bg-gray-800 p-4 rounded-lg shadow-lg">
-            <div className="flex items-center gap-4 mb-4">
+          <div
+            key={build.id}
+            className="bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition w-full max-w-[280px]"
+          >
+            <div className="flex flex-col items-center mb-4">
               <img
                 src={build.champion?.image_url}
                 alt={build.champion?.name}
-                className="w-16 h-16 rounded object-cover"
+                className="w-24 h-40 mb-2"
               />
-              <div>
-                <h2 className="text-xl font-semibold">{build.name}</h2>
-                <p className="text-sm text-gray-400">{build.champion?.name} • {build.role}</p>
+              <div className="text-center">
+                <h2 className="text-lg font-semibold text-white">
+                  {build.name}
+                </h2>
+                <p className="text-sm text-gray-400">
+                  {build.champion?.name} • {build.role}
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 mb-2">
-              <img src={build.keystone_icon_url} alt={build.keystone} className="w-6 h-6" />
-              <span className="text-sm">{build.keystone}</span>
+
+            <div className="flex items-center gap-2 mb-3 justify-center">
+              <img
+                src={build.keystone_icon_url}
+                alt={build.keystone}
+                className="w-6 h-6"
+              />
+              <span className="text-sm text-gray-200">{build.keystone}</span>
             </div>
-            <div className="flex items-center gap-4 text-sm text-gray-400">
+
+            <div className="flex justify-center gap-4 text-sm text-gray-400 mb-2">
               <div className="flex items-center gap-1">
                 <BsHandThumbsUp className="text-yellow-400 text-lg" />
                 {build.positive_comments || 0}
@@ -135,8 +152,9 @@ export default function BuildsPage() {
                 {build.negative_comments || 0}
               </div>
             </div>
+
             <Link href={`/builds/${build.id}`}>
-              <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 cursor-pointer px-4 py-2 rounded text-white text-sm">
+              <button className="mt-2 bg-indigo-600 hover:bg-indigo-700 cursor-pointer px-4 py-1.5 rounded text-white text-sm w-full">
                 See Build
               </button>
             </Link>
@@ -148,13 +166,13 @@ export default function BuildsPage() {
 
       <div className="flex justify-center mt-6 gap-4">
         <button
-          onClick={() => setPage(p => Math.max(1, p - 1))}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
           className="bg-gray-700 px-4 py-2 rounded"
         >
           Previous
         </button>
         <button
-          onClick={() => setPage(p => p + 1)}
+          onClick={() => setPage((p) => p + 1)}
           className="bg-gray-700 px-4 py-2 rounded"
         >
           Next
