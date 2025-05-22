@@ -1,33 +1,33 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
+import Link from "next/link"
+import Image from "next/image"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { jwtDecode } from "jwt-decode"
 
 interface DecodedToken {
-  username: string;
-  is_superuser: boolean;
-  role: string;
-  user_id: number;
+  username: string
+  is_superuser: boolean
+  role: string
+  user_id: number
 }
 
 export default function HeroSection() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isRedacteur, setIsRedacteur] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showTopButton, setShowTopButton] = useState(false);
-  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isRedacteur, setIsRedacteur] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [showTopButton, setShowTopButton] = useState(false)
+  const router = useRouter()
 
  useEffect(() => {
-  const token = localStorage.getItem("access");
+  const token = localStorage.getItem("access")
   if (token) {
-    setIsLoggedIn(true);
+    setIsLoggedIn(true)
 
     try {
-      const decoded: DecodedToken = jwtDecode(token);
-      const userId = decoded.user_id;
+      const decoded: DecodedToken = jwtDecode(token)
+      const userId = decoded.user_id
 
       fetch(`http://127.0.0.1:8000/api/users/${userId}/`, {
         headers: {
@@ -36,43 +36,43 @@ export default function HeroSection() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("User data from API:", data);
+          console.log("User data from API:", data)
           if (data.is_superuser) {
-            setIsRedacteur(true);
+            setIsRedacteur(true)
           }
         })
         .catch((err) => {
-          console.error("Failed to fetch user data:", err);
-        });
+          console.error("Failed to fetch user data:", err)
+        })
 
     } catch (err) {
-      console.error("Invalid token", err);
+      console.error("Invalid token", err)
     }
   }
-}, []);
+}, [])
 
 
 
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowTopButton(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+      setShowTopButton(window.scrollY > 300)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    setIsLoggedIn(false);
-    setIsRedacteur(false);
-    router.push("/");
-  };
+    localStorage.removeItem("access")
+    localStorage.removeItem("refresh")
+    setIsLoggedIn(false)
+    setIsRedacteur(false)
+    router.push("/")
+  }
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 
   return (
     <section className="relative w-screen text-white overflow-hidden min-h-[100vh]">
@@ -203,8 +203,8 @@ export default function HeroSection() {
                 )}
                 <button
                   onClick={() => {
-                    handleLogout();
-                    setMenuOpen(false);
+                    handleLogout()
+                    setMenuOpen(false)
                   }}
                   className="bg-red-600 hover:bg-red-700 text-white text-sm text-center px-4 py-2 rounded transition"
                 >
@@ -271,5 +271,5 @@ export default function HeroSection() {
         ↑
       </button>
     </section>
-  );
+  )
 }

@@ -1,123 +1,123 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import API from "@/utils/axios";
+"use client"
+import React, { useEffect, useState } from "react"
+import { useParams } from "next/navigation"
+import API from "@/utils/axios"
 import {
   BsHandThumbsUpFill,
   BsHandThumbsDownFill,
   BsFillHouseDoorFill,
-} from "react-icons/bs";
-import { PiKeyReturnLight } from "react-icons/pi";
-import Link from "next/link";
-import { jwtDecode } from "jwt-decode";
+} from "react-icons/bs"
+import { PiKeyReturnLight } from "react-icons/pi"
+import Link from "next/link"
+import { jwtDecode } from "jwt-decode"
 
 interface User {
-  username: string;
+  username: string
 }
 
 interface Champion {
-  name: string;
-  image_url: string;
+  name: string
+  image_url: string
 }
 
 interface Avis {
-  author: User;
-  date_poste: string;
-  positif: boolean;
-  commentaire: string;
-  banned: boolean;
+  author: User
+  date_poste: string
+  positif: boolean
+  commentaire: string
+  banned: boolean
 }
 
 interface Build {
-  id: number;
-  name: string;
-  role: string;
-  description: string;
-  author: User;
-  champion: Champion;
-  primary_path: string;
-  primary_path_icon_url: string;
-  keystone: string;
-  keystone_icon_url: string;
-  primary_slot1: string;
-  primary_slot1_icon_url: string;
-  primary_slot2: string;
-  primary_slot2_icon_url: string;
-  primary_slot3: string;
-  primary_slot3_icon_url: string;
-  secondary_path: string;
-  secondary_path_icon_url: string;
-  secondary_slot1: string;
-  secondary_slot1_icon_url: string;
-  secondary_slot2: string;
-  secondary_slot2_icon_url: string;
-  shard_offense: string;
-  shard_offense_icon_url: string;
-  shard_flex: string;
-  shard_flex_icon_url: string;
-  shard_defense: string;
-  shard_defense_icon_url: string;
-  avis: Avis[];
-  is_public: boolean;
+  id: number
+  name: string
+  role: string
+  description: string
+  author: User
+  champion: Champion
+  primary_path: string
+  primary_path_icon_url: string
+  keystone: string
+  keystone_icon_url: string
+  primary_slot1: string
+  primary_slot1_icon_url: string
+  primary_slot2: string
+  primary_slot2_icon_url: string
+  primary_slot3: string
+  primary_slot3_icon_url: string
+  secondary_path: string
+  secondary_path_icon_url: string
+  secondary_slot1: string
+  secondary_slot1_icon_url: string
+  secondary_slot2: string
+  secondary_slot2_icon_url: string
+  shard_offense: string
+  shard_offense_icon_url: string
+  shard_flex: string
+  shard_flex_icon_url: string
+  shard_defense: string
+  shard_defense_icon_url: string
+  avis: Avis[]
+  is_public: boolean
 }
 
 export default function BuildDetailPage() {
-  const params = useParams();
-  const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
-  const [build, setBuild] = useState<Build | null>(null);
-  const [newComment, setNewComment] = useState("");
-  const [isPositive, setIsPositive] = useState(true);
-  const [submitMessage, setSubmitMessage] = useState("");
-  const [isAuthor, setIsAuthor] = useState(false);
-  const [isSuperuser, setIsSuperuser] = useState(false);
-  const [editedBuild, setEditedBuild] = useState<Partial<Build>>({});
-  const [isEditing, setIsEditing] = useState(false);
+  const params = useParams()
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id
+  const [build, setBuild] = useState<Build | null>(null)
+  const [newComment, setNewComment] = useState("")
+  const [isPositive, setIsPositive] = useState(true)
+  const [submitMessage, setSubmitMessage] = useState("")
+  const [isAuthor, setIsAuthor] = useState(false)
+  const [isSuperuser, setIsSuperuser] = useState(false)
+  const [editedBuild, setEditedBuild] = useState<Partial<Build>>({})
+  const [isEditing, setIsEditing] = useState(false)
 
   const fallback = (name: string) =>
     `/images/custom-runes/${name
       .replace(/ /g, "")
       .replace(":", "")
-      .replace("'", "")}.png`;
+      .replace("'", "")}.png`
 
   const fetchBuild = async () => {
     try {
-      const res = await API.get(`builds/${id}/`);
-      setBuild(res.data);
-      setEditedBuild(res.data);
+      const res = await API.get(`builds/${id}/`)
+      setBuild(res.data)
+      setEditedBuild(res.data)
     } catch (err) {
-      console.error("Error loading build:", err);
+      console.error("Error loading build:", err)
     }
-  };
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await API.get(`builds/${id}/`);
-        setBuild(res.data);
-        setEditedBuild(res.data);
+        const res = await API.get(`builds/${id}/`)
+        setBuild(res.data)
+        setEditedBuild(res.data)
 
-        const token = localStorage.getItem("access");
+        const token = localStorage.getItem("access")
         if (token) {
-          const decoded: any = jwtDecode(token);
-          console.log("Token decoded:", decoded);
+          const decoded: any = jwtDecode(token)
+          console.log("Token decoded:", decoded)
 
-          const currentUser = localStorage.getItem("username");
-          const isAdmin = decoded.is_superuser;
-          console.log("Current user:", currentUser);
-          console.log("Is admin:", isAdmin);
-          setIsSuperuser(isAdmin);
+          const currentUser = localStorage.getItem("username")
+          const isAdmin = decoded.is_superuser
+          console.log("Current user:", currentUser)
+          console.log("Is admin:", isAdmin)
+          setIsSuperuser(isAdmin)
 
           if (res.data.author?.username === currentUser || isAdmin) {
-            setIsAuthor(true);
+            setIsAuthor(true)
           }
         }
       } catch (err) {
-        console.error("Error loading build:", err);
+        console.error("Error loading build:", err)
       }
-    };
+    }
 
-    if (id) fetchData();
-  }, [id]);
+    if (id) fetchData()
+  }, [id])
 
   const handleUpdateBuild = async () => {
     try {
@@ -145,16 +145,16 @@ export default function BuildDetailPage() {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
-      );
-      alert("Build updated!");
-      fetchBuild();
+      )
+      alert("Build updated!")
+      fetchBuild()
     } catch (err) {
-      console.error("Update failed:", err);
+      console.error("Update failed:", err)
     }
-  };
+  }
 
   const handleSubmitComment = async () => {
-    if (!newComment.trim()) return;
+    if (!newComment.trim()) return
     try {
       await API.post(
         `/builds/${id}/avis/`,
@@ -167,17 +167,17 @@ export default function BuildDetailPage() {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
-      );
-      setSubmitMessage("Comment sent !");
-      setNewComment("");
-      fetchBuild();
+      )
+      setSubmitMessage("Comment sent !")
+      setNewComment("")
+      fetchBuild()
     } catch (err) {
-      console.error(err);
-      setSubmitMessage("Error while sending comment.");
+      console.error(err)
+      setSubmitMessage("Error while sending comment.")
     }
-  };
+  }
 
-  if (!build) return <p className="p-8 text-white">Loading build...</p>;
+  if (!build) return <p className="p-8 text-white">Loading build...</p>
 
   return (
     <main className="p-8 max-w-5xl mx-auto text-white space-y-10">
@@ -251,10 +251,10 @@ export default function BuildDetailPage() {
                       Authorization: `Bearer ${localStorage.getItem("access")}`,
                     },
                   }
-                );
-                fetchBuild();
+                )
+                fetchBuild()
               } catch (err) {
-                console.error("Toggle visibility failed:", err);
+                console.error("Toggle visibility failed:", err)
               }
             }}
             className={`px-4 py-2 rounded text-white ${
@@ -281,10 +281,10 @@ export default function BuildDetailPage() {
                     headers: {
                       Authorization: `Bearer ${localStorage.getItem("access")}`,
                     },
-                  });
-                  window.location.href = "/builds";
+                  })
+                  window.location.href = "/builds"
                 } catch (err) {
-                  console.error("Error deleting build:", err);
+                  console.error("Error deleting build:", err)
                 }
               }
             }}
@@ -493,5 +493,5 @@ export default function BuildDetailPage() {
         </div>
       </section>
     </main>
-  );
+  )
 }
