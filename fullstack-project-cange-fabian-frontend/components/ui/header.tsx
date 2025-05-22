@@ -10,6 +10,7 @@ interface DecodedToken {
   username: string
   is_superuser: boolean
   role: string
+  user_id: number
 }
 
 export default function Header() {
@@ -19,17 +20,32 @@ export default function Header() {
   const router = useRouter()
 
   useEffect(() => {
-    const token = localStorage.getItem('access')
-    const role = localStorage.getItem("role")
+    const token = localStorage.getItem("access")
     if (token) {
-      setIsLoggedIn(!!token)
+      setIsLoggedIn(true)
+  
       try {
         const decoded: DecodedToken = jwtDecode(token)
-        if (role === "Redacteur") {
-          setIsRedacteur(true)
-        }
+        const userId = decoded.user_id
+  
+        fetch(`http://127.0.0.1:8000/api/users/${userId}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("User data from API:", data)
+            if (data.is_superuser) {
+              setIsRedacteur(true)
+            }
+          })
+          .catch((err) => {
+            console.error("Failed to fetch user data:", err)
+          })
+  
       } catch (err) {
-        console.error('Invalid token')
+        console.error("Invalid token", err)
       }
     }
   }, [])

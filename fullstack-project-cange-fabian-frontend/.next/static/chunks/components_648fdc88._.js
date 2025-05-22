@@ -30,17 +30,32 @@ function Header() {
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Header.useEffect": ()=>{
-            const token = localStorage.getItem('access');
-            const role = localStorage.getItem("role");
+            const token = localStorage.getItem("access");
             if (token) {
-                setIsLoggedIn(!!token);
+                setIsLoggedIn(true);
                 try {
                     const decoded = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$jwt$2d$decode$2f$build$2f$esm$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jwtDecode"])(token);
-                    if (role === "Redacteur") {
-                        setIsRedacteur(true);
-                    }
+                    const userId = decoded.user_id;
+                    fetch(`http://127.0.0.1:8000/api/users/${userId}/`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }).then({
+                        "Header.useEffect": (res)=>res.json()
+                    }["Header.useEffect"]).then({
+                        "Header.useEffect": (data)=>{
+                            console.log("User data from API:", data);
+                            if (data.is_superuser) {
+                                setIsRedacteur(true);
+                            }
+                        }
+                    }["Header.useEffect"]).catch({
+                        "Header.useEffect": (err)=>{
+                            console.error("Failed to fetch user data:", err);
+                        }
+                    }["Header.useEffect"]);
                 } catch (err) {
-                    console.error('Invalid token');
+                    console.error("Invalid token", err);
                 }
             }
         }
@@ -72,17 +87,17 @@ function Header() {
                                 className: "object-contain"
                             }, void 0, false, {
                                 fileName: "[project]/components/ui/header.tsx",
-                                lineNumber: 54,
+                                lineNumber: 70,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/ui/header.tsx",
-                            lineNumber: 53,
+                            lineNumber: 69,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/ui/header.tsx",
-                        lineNumber: 52,
+                        lineNumber: 68,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -101,17 +116,17 @@ function Header() {
                                 d: "M4 6h16M4 12h16M4 18h16"
                             }, void 0, false, {
                                 fileName: "[project]/components/ui/header.tsx",
-                                lineNumber: 68,
+                                lineNumber: 84,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/ui/header.tsx",
-                            lineNumber: 67,
+                            lineNumber: 83,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/ui/header.tsx",
-                        lineNumber: 66,
+                        lineNumber: 82,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -125,12 +140,12 @@ function Header() {
                                         children: "Create Build"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/header.tsx",
-                                        lineNumber: 78,
+                                        lineNumber: 94,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 77,
+                                    lineNumber: 93,
                                     columnNumber: 17
                                 }, this),
                                 isRedacteur && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -140,12 +155,12 @@ function Header() {
                                         children: "Create Article"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/header.tsx",
-                                        lineNumber: 82,
+                                        lineNumber: 98,
                                         columnNumber: 21
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 81,
+                                    lineNumber: 97,
                                     columnNumber: 19
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -155,12 +170,12 @@ function Header() {
                                         children: "Logout"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/header.tsx",
-                                        lineNumber: 86,
+                                        lineNumber: 102,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 85,
+                                    lineNumber: 101,
                                     columnNumber: 17
                                 }, this)
                             ]
@@ -173,12 +188,12 @@ function Header() {
                                         children: "Login"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/header.tsx",
-                                        lineNumber: 92,
+                                        lineNumber: 108,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 91,
+                                    lineNumber: 107,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -188,19 +203,19 @@ function Header() {
                                         children: "Register"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/header.tsx",
-                                        lineNumber: 95,
+                                        lineNumber: 111,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 94,
+                                    lineNumber: 110,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true)
                     }, void 0, false, {
                         fileName: "[project]/components/ui/header.tsx",
-                        lineNumber: 74,
+                        lineNumber: 90,
                         columnNumber: 11
                     }, this),
                     menuOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -214,7 +229,7 @@ function Header() {
                                     children: "Create Build"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 107,
+                                    lineNumber: 123,
                                     columnNumber: 19
                                 }, this),
                                 isRedacteur && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -224,7 +239,7 @@ function Header() {
                                     children: "Create Article"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 109,
+                                    lineNumber: 125,
                                     columnNumber: 21
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -236,7 +251,7 @@ function Header() {
                                     children: "Logout"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 111,
+                                    lineNumber: 127,
                                     columnNumber: 19
                                 }, this)
                             ]
@@ -249,7 +264,7 @@ function Header() {
                                     children: "Login"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 115,
+                                    lineNumber: 131,
                                     columnNumber: 19
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -259,30 +274,30 @@ function Header() {
                                     children: "Register"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/header.tsx",
-                                    lineNumber: 116,
+                                    lineNumber: 132,
                                     columnNumber: 19
                                 }, this)
                             ]
                         }, void 0, true)
                     }, void 0, false, {
                         fileName: "[project]/components/ui/header.tsx",
-                        lineNumber: 104,
+                        lineNumber: 120,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ui/header.tsx",
-                lineNumber: 48,
+                lineNumber: 64,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/components/ui/header.tsx",
-            lineNumber: 47,
+            lineNumber: 63,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/ui/header.tsx",
-        lineNumber: 46,
+        lineNumber: 62,
         columnNumber: 5
     }, this);
 }
