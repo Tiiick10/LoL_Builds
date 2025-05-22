@@ -194,7 +194,7 @@ function CreateBuildPage() {
                         className: "w-full p-2 bg-gray-800 rounded h-32"
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 115,
+                        lineNumber: 117,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -211,7 +211,7 @@ function CreateBuildPage() {
                                 children: "Select Role"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 129,
+                                lineNumber: 135,
                                 columnNumber: 11
                             }, this),
                             ROLES.map((role)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -219,13 +219,13 @@ function CreateBuildPage() {
                                     children: role
                                 }, role, false, {
                                     fileName: "[project]/app/create-build/page.tsx",
-                                    lineNumber: 131,
+                                    lineNumber: 137,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 123,
+                        lineNumber: 127,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -248,7 +248,7 @@ function CreateBuildPage() {
                                 className: "w-full p-2 bg-gray-800 rounded"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 137,
+                                lineNumber: 145,
                                 columnNumber: 11
                             }, this),
                             showSuggestions && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -269,31 +269,31 @@ function CreateBuildPage() {
                                                 className: "w-6 h-6 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/create-build/page.tsx",
-                                                lineNumber: 165,
+                                                lineNumber: 173,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: c.name
                                             }, void 0, false, {
                                                 fileName: "[project]/app/create-build/page.tsx",
-                                                lineNumber: 170,
+                                                lineNumber: 178,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, c.id, true, {
                                         fileName: "[project]/app/create-build/page.tsx",
-                                        lineNumber: 157,
+                                        lineNumber: 165,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 155,
+                                lineNumber: 163,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 136,
+                        lineNumber: 144,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -314,7 +314,7 @@ function CreateBuildPage() {
                                 children: "Select Primary Path"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 193,
+                                lineNumber: 201,
                                 columnNumber: 11
                             }, this),
                             runes.map((r)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -322,13 +322,13 @@ function CreateBuildPage() {
                                     children: r.name
                                 }, r.id, false, {
                                     fileName: "[project]/app/create-build/page.tsx",
-                                    lineNumber: 195,
+                                    lineNumber: 203,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 178,
+                        lineNumber: 186,
                         columnNumber: 9
                     }, this),
                     primary && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -345,7 +345,7 @@ function CreateBuildPage() {
                                 children: "Select Keystone"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 209,
+                                lineNumber: 219,
                                 columnNumber: 13
                             }, this),
                             primary.slots[0]?.runes.map((rune)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -353,13 +353,13 @@ function CreateBuildPage() {
                                     children: rune.name
                                 }, rune.id, false, {
                                     fileName: "[project]/app/create-build/page.tsx",
-                                    lineNumber: 211,
+                                    lineNumber: 221,
                                     columnNumber: 15
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 203,
+                        lineNumber: 211,
                         columnNumber: 11
                     }, this),
                     primary && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -379,7 +379,7 @@ function CreateBuildPage() {
                                         children: `Primary Slot ${idx + 1}`
                                     }, void 0, false, {
                                         fileName: "[project]/app/create-build/page.tsx",
-                                        lineNumber: 235,
+                                        lineNumber: 245,
                                         columnNumber: 19
                                     }, this),
                                     slot.runes.map((rune)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -387,19 +387,19 @@ function CreateBuildPage() {
                                             children: rune.name
                                         }, rune.id, false, {
                                             fileName: "[project]/app/create-build/page.tsx",
-                                            lineNumber: 237,
+                                            lineNumber: 247,
                                             columnNumber: 21
                                         }, this))
                                 ]
                             }, idx, true, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 224,
+                                lineNumber: 234,
                                 columnNumber: 17
                             }, this);
                         })
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 220,
+                        lineNumber: 230,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -418,7 +418,7 @@ function CreateBuildPage() {
                                 children: "Select Secondary Path"
                             }, void 0, false, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 261,
+                                lineNumber: 271,
                                 columnNumber: 11
                             }, this),
                             secondaryBranches.map((r)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -426,13 +426,13 @@ function CreateBuildPage() {
                                     children: r.name
                                 }, r.id, false, {
                                     fileName: "[project]/app/create-build/page.tsx",
-                                    lineNumber: 263,
+                                    lineNumber: 273,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 248,
+                        lineNumber: 258,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -440,42 +440,45 @@ function CreateBuildPage() {
                         children: [
                             1,
                             2
-                        ].map((idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                                value: form[`secondary_slot${idx}`],
+                        ].map((idx)=>{
+                            const currentKey = `secondary_slot${idx}`;
+                            const otherKey = `secondary_slot${idx === 1 ? 2 : 1}`;
+                            const selectedOther = form[otherKey];
+                            const options = secondary?.slots.slice(1).flatMap((slot)=>slot.runes).filter((rune)=>rune.name !== selectedOther);
+                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                value: form[currentKey],
                                 onChange: (e)=>setForm((prev)=>({
                                             ...prev,
-                                            [`secondary_slot${idx}`]: e.target.value
+                                            [currentKey]: e.target.value
                                         })),
                                 className: "p-2 bg-gray-800 rounded",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                         value: "",
-                                        children: [
-                                            "Secondary Slot ",
-                                            idx
-                                        ]
-                                    }, void 0, true, {
+                                        children: `Secondary Slot ${idx}`
+                                    }, void 0, false, {
                                         fileName: "[project]/app/create-build/page.tsx",
-                                        lineNumber: 283,
-                                        columnNumber: 15
+                                        lineNumber: 305,
+                                        columnNumber: 17
                                     }, this),
-                                    secondary?.slots.slice(1).flatMap((slot)=>slot.runes).map((rune)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                    options?.map((rune)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                             value: rune.name,
                                             children: rune.name
                                         }, rune.id, false, {
                                             fileName: "[project]/app/create-build/page.tsx",
-                                            lineNumber: 288,
+                                            lineNumber: 307,
                                             columnNumber: 19
                                         }, this))
                                 ]
                             }, idx, true, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 272,
-                                columnNumber: 13
-                            }, this))
+                                lineNumber: 294,
+                                columnNumber: 15
+                            }, this);
+                        })
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 270,
+                        lineNumber: 280,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -483,7 +486,7 @@ function CreateBuildPage() {
                         children: "Select Shards"
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 297,
+                        lineNumber: 317,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -511,7 +514,7 @@ function CreateBuildPage() {
                                         children: `Shard ${i + 1}`
                                     }, void 0, false, {
                                         fileName: "[project]/app/create-build/page.tsx",
-                                        lineNumber: 310,
+                                        lineNumber: 330,
                                         columnNumber: 17
                                     }, this),
                                     row.map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -519,19 +522,19 @@ function CreateBuildPage() {
                                             children: s.label
                                         }, s.value, false, {
                                             fileName: "[project]/app/create-build/page.tsx",
-                                            lineNumber: 312,
+                                            lineNumber: 332,
                                             columnNumber: 19
                                         }, this))
                                 ]
                             }, name, true, {
                                 fileName: "[project]/app/create-build/page.tsx",
-                                lineNumber: 302,
+                                lineNumber: 322,
                                 columnNumber: 15
                             }, this);
                         })
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 298,
+                        lineNumber: 318,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -540,7 +543,7 @@ function CreateBuildPage() {
                         children: "Create Build"
                     }, void 0, false, {
                         fileName: "[project]/app/create-build/page.tsx",
-                        lineNumber: 321,
+                        lineNumber: 341,
                         columnNumber: 9
                     }, this)
                 ]

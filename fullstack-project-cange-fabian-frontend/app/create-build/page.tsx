@@ -108,7 +108,9 @@ export default function CreateBuildPage() {
           name="name"
           placeholder="Build name"
           value={form.name}
-          onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, name: e.target.value }))
+          }
           className="w-full p-2 bg-gray-800 rounded"
         />
 
@@ -116,19 +118,25 @@ export default function CreateBuildPage() {
           name="description"
           placeholder="Description (HTML allowed)"
           value={form.description}
-          onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, description: e.target.value }))
+          }
           className="w-full p-2 bg-gray-800 rounded h-32"
         />
 
         <select
           name="role"
           value={form.role}
-          onChange={(e) => setForm((prev) => ({ ...prev, role: e.target.value }))}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, role: e.target.value }))
+          }
           className="w-full p-2 bg-gray-800 rounded"
         >
           <option value="">Select Role</option>
           {ROLES.map((role) => (
-            <option key={role} value={role}>{role}</option>
+            <option key={role} value={role}>
+              {role}
+            </option>
           ))}
         </select>
 
@@ -203,7 +211,9 @@ export default function CreateBuildPage() {
           <select
             name="keystone"
             value={form.keystone}
-            onChange={(e) => setForm((prev) => ({ ...prev, keystone: e.target.value }))}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, keystone: e.target.value }))
+            }
             className="w-full p-2 bg-gray-800 rounded"
           >
             <option value="">Select Keystone</option>
@@ -268,29 +278,39 @@ export default function CreateBuildPage() {
 
         {/* Secondary Slot Runes */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {[1, 2].map((idx) => (
-            <select
-              key={idx}
-              value={form[`secondary_slot${idx}` as keyof typeof form]}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  [`secondary_slot${idx}`]: e.target.value,
-                }))
-              }
-              className="p-2 bg-gray-800 rounded"
-            >
-              <option value="">Secondary Slot {idx}</option>
-              {secondary?.slots
-                .slice(1)
-                .flatMap((slot: any) => slot.runes)
-                .map((rune: any) => (
+          {[1, 2].map((idx) => {
+            const currentKey = `secondary_slot${idx}` as keyof typeof form
+            const otherKey = `secondary_slot${
+              idx === 1 ? 2 : 1
+            }` as keyof typeof form
+            const selectedOther = form[otherKey]
+
+            const options = secondary?.slots
+              .slice(1)
+              .flatMap((slot: any) => slot.runes)
+              .filter((rune: any) => rune.name !== selectedOther)
+
+            return (
+              <select
+                key={idx}
+                value={form[currentKey]}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    [currentKey]: e.target.value,
+                  }))
+                }
+                className="p-2 bg-gray-800 rounded"
+              >
+                <option value="">{`Secondary Slot ${idx}`}</option>
+                {options?.map((rune: any) => (
                   <option key={rune.id} value={rune.name}>
                     {rune.name}
                   </option>
                 ))}
-            </select>
-          ))}
+              </select>
+            )
+          })}
         </div>
 
         {/* Stat Shards */}

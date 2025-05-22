@@ -28,11 +28,11 @@ export default function HomePage() {
   }, [])
 
   return (
-    <main className="space-y-12 p-8">
+    <main>
       <HeroSection />
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">Latest Builds</h2>
+        <h2 className="flex justify-center items-center text-4xl font-bold mb-15 mt-15">Latest Builds</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {latestBuilds.map((build: any) => (
             <BuildsCard key={build.id} build={build} />
@@ -41,7 +41,7 @@ export default function HomePage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">Popular Builds</h2>
+        <h2 className="flex justify-center items-center text-4xl font-bold mb-15 mt-15">Popular Builds</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {topBuilds.map((build: any) => (
             <BuildsCard key={build.id} build={build} />
@@ -50,7 +50,7 @@ export default function HomePage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">Latest Articles</h2>
+        <h2 className="flex justify-center items-center text-4xl font-bold mb-15 mt-15">Latest Articles</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article: any) => (
             <ArticleCard key={article.id} article={article} />
