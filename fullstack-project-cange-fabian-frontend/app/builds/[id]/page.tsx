@@ -10,6 +10,7 @@ import {
 import { PiKeyReturnLight } from "react-icons/pi"
 import Link from "next/link"
 import { jwtDecode } from "jwt-decode"
+import DOMPurify from "dompurify"
 
 interface User {
   username: string
@@ -69,9 +70,7 @@ export default function BuildDetailPage() {
   const [isPositive, setIsPositive] = useState(true)
   const [submitMessage, setSubmitMessage] = useState("")
   const [isAuthor, setIsAuthor] = useState(false)
-  const [isSuperuser, setIsSuperuser] = useState(false)
   const [editedBuild, setEditedBuild] = useState<Partial<Build>>({})
-  const [isEditing, setIsEditing] = useState(false)
 
   const fallback = (name: string) =>
     `/images/custom-runes/${name
@@ -99,13 +98,9 @@ export default function BuildDetailPage() {
         const token = localStorage.getItem("access")
         if (token) {
           const decoded: any = jwtDecode(token)
-          console.log("Token decoded:", decoded)
 
           const currentUser = localStorage.getItem("username")
           const isAdmin = decoded.is_superuser
-          console.log("Current user:", currentUser)
-          console.log("Is admin:", isAdmin)
-          setIsSuperuser(isAdmin)
 
           if (res.data.author?.username === currentUser || isAdmin) {
             setIsAuthor(true)
@@ -318,7 +313,9 @@ export default function BuildDetailPage() {
         <h2 className="text-3xl font-semibold mb-4">Build Description</h2>
         <div
           className="prose prose-invert max-w-none text-white"
-          dangerouslySetInnerHTML={{ __html: build.description }}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(build.description || ""),
+          }}
         />
       </section>
 

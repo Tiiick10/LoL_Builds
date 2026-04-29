@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import API from '@/utils/axios'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -12,7 +12,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const res = await axios.post('http://localhost:8000/api/custom-login/', {
+      const res = await API.post('custom-login/', {
         username,
         password
       })

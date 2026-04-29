@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import API from '@/utils/axios'
+import DOMPurify from 'dompurify'
 
 export default function ArticleDetailPage() {
   const { id } = useParams()
@@ -39,7 +40,7 @@ export default function ArticleDetailPage() {
 
       <div
         className="prose prose-invert max-w-none"
-        dangerouslySetInnerHTML={{ __html: article.contenu }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.contenu || '') }}
       />
     </main>
   )
