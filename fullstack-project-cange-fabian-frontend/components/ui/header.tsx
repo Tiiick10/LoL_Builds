@@ -2,59 +2,18 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { jwtDecode } from 'jwt-decode'
-
-interface DecodedToken {
-  username: string
-  is_superuser: boolean
-  role: string
-  user_id: number
-}
+import useAuthState from '@/utils/useAuthState'
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isRedacteur, setIsRedacteur] = useState(false)
+  const { isLoggedIn, isRedacteur } = useAuthState()
   const [menuOpen, setMenuOpen] = useState(false)
   const router = useRouter()
-
-  useEffect(() => {
-    const token = localStorage.getItem("access")
-    if (token) {
-      setIsLoggedIn(true)
-  
-      try {
-        const decoded: DecodedToken = jwtDecode(token)
-        const userId = decoded.user_id
-  
-        fetch(`http://127.0.0.1:8000/api/users/${userId}/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log("User data from API:", data)
-            if (data.is_superuser) {
-              setIsRedacteur(true)
-            }
-          })
-          .catch((err) => {
-            console.error("Failed to fetch user data:", err)
-          })
-  
-      } catch (err) {
-        console.error("Invalid token", err)
-      }
-    }
-  }, [])
 
   const handleLogout = () => {
     localStorage.removeItem('access')
     localStorage.removeItem('refresh')
-    setIsLoggedIn(false)
-    setIsRedacteur(false)
     router.push('/')
   }
 

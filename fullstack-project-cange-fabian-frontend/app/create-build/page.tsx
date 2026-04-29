@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
+import API from "@/utils/axios"
 
 const ROLES = ["top", "jungle", "mid", "adc", "support"]
 
@@ -59,9 +60,7 @@ export default function CreateBuildPage() {
     if (!form.champion_name) return setError("Please select a champion.")
 
     try {
-      await axios.post("http://127.0.0.1:8000/api/builds/create/", form, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      await API.post("builds/create/", form)
       setMessage("Build created successfully!")
       setTimeout(() => router.push("/builds"), 1500)
     } catch (err: any) {
