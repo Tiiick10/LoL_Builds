@@ -1,4 +1,4 @@
-from rest_framework import generics, status, serializers
+from rest_framework import generics, status, serializers, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
@@ -141,7 +141,7 @@ class BuildDetailView(RetrieveUpdateDestroyAPIView):
 class BuildDeleteView(generics.DestroyAPIView):
     queryset = Build.objects.all()
     serializer_class = BuildSerializer
-    permission_classes = [IsAuthenticated, IsUtilisateur, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 # --------------------------- #
 # BUILD PUBLIC LIST & FILTERS #

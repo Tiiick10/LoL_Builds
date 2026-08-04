@@ -128,7 +128,7 @@ print("10 builds generated")
 categories = ['guide', 'news', 'patch', 'meta']
 for i in range(10):
     titre = f"Article {i+1}"
-    image = "https://via.placeholder.com/1200x400.png?text=Banner"
+    image = "https://pbs.twimg.com/media/E629ivCVoAAsHrU.jpg:large"
     contenu = f"<h2>LoL Article n°{i+1}</h2><p>Actual Meta : itemis and aggressive gameplay.</p>"
 
     Article.objects.create(

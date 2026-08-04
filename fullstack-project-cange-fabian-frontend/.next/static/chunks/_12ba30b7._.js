@@ -319,7 +319,7 @@ function BuildDetailPage() {
                         onClick: async ()=>{
                             if (confirm("Are you sure you want to delete this build?")) {
                                 try {
-                                    await __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].delete(`/builds/${build.id}/delete/`, {
+                                    await __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].delete(`/builds/${build.id}/`, {
                                         headers: {
                                             Authorization: `Bearer ${localStorage.getItem("access")}`
                                         }
