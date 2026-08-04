@@ -6,10 +6,11 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db.models import Count, Q
+from django.conf import settings
 from .models import Champion, Build, AvisBuild, Article
 from .serializers import (
     ChampionSerializer, BuildSerializer, AvisBuildSerializer,
@@ -18,6 +19,75 @@ from .serializers import (
 )
 from .permissions import IsRedacteur, IsUtilisateur, IsOwnerOrReadOnly
 import re
+
+
+# ------------------------------------------------------------------ #
+# Cookie helpers - store JWT tokens in httpOnly cookies              #
+# ------------------------------------------------------------------ #
+
+def _access_cookie_name():
+    return getattr(settings, 'AUTH_COOKIE_ACCESS', 'access')
+
+
+def _refresh_cookie_name():
+    return getattr(settings, 'AUTH_COOKIE_REFRESH', 'refresh')
+
+
+def _cookie_secure():
+    return getattr(settings, 'AUTH_COOKIE_SECURE', False)
+
+
+def _cookie_httponly():
+    return getattr(settings, 'AUTH_COOKIE_HTTPONLY', True)
+
+
+def _cookie_samesite():
+    return getattr(settings, 'AUTH_COOKIE_SAMESITE', 'Lax')
+
+
+def _cookie_max_age():
+    return getattr(settings, 'AUTH_COOKIE_MAX_AGE', 60 * 60 * 24 * 7)
+
+
+def _set_auth_cookies(response, access_token, refresh_token):
+    """Set the access and refresh tokens as httpOnly cookies on the response."""
+    response.set_cookie(
+        _access_cookie_name(),
+        access_token,
+        max_age=getattr(settings, 'AUTH_COOKIE_ACCESS_MAX_AGE', 60 * 60),
+        httponly=_cookie_httponly(),
+        secure=_cookie_secure(),
+        samesite=_cookie_samesite(),
+        path='/',
+    )
+    response.set_cookie(
+        _refresh_cookie_name(),
+        refresh_token,
+        max_age=_cookie_max_age(),
+        httponly=_cookie_httponly(),
+        secure=_cookie_secure(),
+        samesite=_cookie_samesite(),
+        path='/',
+    )
+    return response
+
+
+def _clear_auth_cookies(response):
+    """Delete the auth cookies from the response."""
+    response.delete_cookie(_access_cookie_name(), path='/')
+    response.delete_cookie(_refresh_cookie_name(), path='/')
+    return response
+
+
+def _user_role(user):
+    """Return the role string for a user (mirrors the JWT payload)."""
+    if user.is_superuser:
+        return 'Admin'
+    if user.groups.filter(name='Rédacteur').exists():
+        return 'Redacteur'
+    if user.groups.filter(name='Manager').exists():
+        return 'Manager'
+    return 'User'
 
 # Create your views here.
 
@@ -40,24 +110,80 @@ def custom_login_view(request):
         return Response({"detail": "Invalid credentials"}, status=401)
 
     refresh = RefreshToken.for_user(user)
+    role = _user_role(user)
 
-    if user.groups.filter(name="Rédacteur").exists():
-        role = "Redacteur"
-    elif user.groups.filter(name="Admin").exists():
-        role = "Admin"
-    elif user.groups.filter(name="Manager").exists():
-        role = "Manager"
-    else:
-        role = "User"
-
-    return Response({
-        "access": str(refresh.access_token),
-        "refresh": str(refresh),
+    response = Response({
         "user_id": user.id,
         "username": user.username,
         "is_superuser": user.is_superuser,
         "role": role,
-    })
+    }, status=200)
+
+    # Store the tokens in httpOnly cookies (inaccessible to JavaScript)
+    _set_auth_cookies(response, str(refresh.access_token), str(refresh))
+    return response
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def cookie_token_refresh_view(request):
+    """Refresh the access token from the httpOnly refresh cookie."""
+    refresh_token = request.COOKIES.get(_refresh_cookie_name())
+    if not refresh_token:
+        return Response({"detail": "Refresh token cookie missing."}, status=401)
+
+    try:
+        refresh = RefreshToken(refresh_token)
+        new_access = str(refresh.access_token)
+        user = User.objects.get(id=refresh['user_id'])
+        role = _user_role(user)
+    except Exception:
+        response = Response({"detail": "Invalid or expired refresh token."}, status=401)
+        _clear_auth_cookies(response)
+        return response
+
+    response = Response({
+        "access": new_access,
+        "user_id": user.id,
+        "username": user.username,
+        "is_superuser": user.is_superuser,
+        "role": role,
+    }, status=200)
+
+    # Rotate the refresh cookie too
+    new_refresh = str(refresh)
+    _set_auth_cookies(response, new_access, new_refresh)
+    return response
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def logout_view(request):
+    """Clear the httpOnly auth cookies."""
+    response = Response({"detail": "Logged out."}, status=200)
+    _clear_auth_cookies(response)
+    return response
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def auth_status_view(request):
+    """Return the current auth state (used by the frontend AuthProvider on mount)."""
+    from .authentication import CookieJWTAuthentication
+    try:
+        user, _ = CookieJWTAuthentication().authenticate(request)
+    except Exception:
+        user = None
+
+    if user is not None:
+        return Response({
+            "isLoggedIn": True,
+            "user_id": user.id,
+            "username": user.username,
+            "is_superuser": user.is_superuser,
+            "role": _user_role(user),
+        }, status=200)
+    return Response({"isLoggedIn": False}, status=200)
 
 # ---- #
 # AUTH #

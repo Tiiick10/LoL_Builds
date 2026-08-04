@@ -135,6 +135,9 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Required so the frontend can send/receive cookies with fetch/axios
+CORS_ALLOW_CREDENTIALS = True
+
 # Dev UNIQUEMENT
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
 
@@ -142,7 +145,7 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('build_LoL.authentication.CookieJWTAuthentication',),
 }
 
 SIMPLE_JWT = {
@@ -150,3 +153,15 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# ------------------------------------------------------------------ #
+# httpOnly cookie configuration for JWT storage                      #
+# ------------------------------------------------------------------ #
+
+AUTH_COOKIE_ACCESS = 'access'
+AUTH_COOKIE_REFRESH = 'refresh'
+AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 60            # 1 hour (matches ACCESS_TOKEN_LIFETIME)
+AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 7         # 7 days (matches REFRESH_TOKEN_LIFETIME)
+AUTH_COOKIE_SECURE = False                     # True behind HTTPS in production
+AUTH_COOKIE_HTTPONLY = True                    # JavaScript cannot read the token
+AUTH_COOKIE_SAMESITE = 'Lax'

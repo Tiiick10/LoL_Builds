@@ -2,11 +2,17 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import API from '@/utils/axios'
-import DOMPurify from 'dompurify'
+import type { Article } from '@/types'
+
+const sanitizeHtml = (html: string) => {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/\s(on\w+|style)=['"][^'"]*['"]/gi, '')
+}
 
 export default function ArticleDetailPage() {
   const { id } = useParams()
-  const [article, setArticle] = useState<any>(null)
+  const [article, setArticle] = useState<Article | null>(null)
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -40,7 +46,7 @@ export default function ArticleDetailPage() {
 
       <div
         className="prose prose-invert max-w-none"
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.contenu || '') }}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.contenu || '') }}
       />
     </main>
   )

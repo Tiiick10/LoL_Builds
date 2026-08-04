@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/articles/[id]/page": "/articles/[id]",
+  "/builds/[id]/page": "/builds/[id]",
+  "/articles/create/page": "/articles/create",
+  "/create-build/page": "/create-build",
+  "/logout/page": "/logout",
+  "/login/page": "/login",
+  "/register/page": "/register",
+  "/articles/page": "/articles",
+  "/page": "/",
+  "/builds/page": "/builds"
+}

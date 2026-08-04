@@ -1,34 +1,10 @@
-import { useEffect, useState } from 'react'
-import { jwtDecode } from 'jwt-decode'
+import { useAuth } from '@/providers/AuthProvider'
 
-interface DecodedToken {
-  username?: string
-  role?: string
-  is_superuser?: boolean
-}
-
+/**
+ * Backwards-compatible hook.
+ * Reads reactive auth state from the AuthContext instead of localStorage.
+ */
 export default function useAuthState() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isRedacteur, setIsRedacteur] = useState(false)
-
-  useEffect(() => {
-    const token = localStorage.getItem('access')
-    if (!token) {
-      setIsLoggedIn(false)
-      setIsRedacteur(false)
-      return
-    }
-
-    try {
-      const decoded: DecodedToken = jwtDecode(token)
-      const hasRedacteurRole = decoded.role === 'Redacteur' || decoded.is_superuser === true
-      setIsLoggedIn(true)
-      setIsRedacteur(hasRedacteurRole)
-    } catch {
-      setIsLoggedIn(false)
-      setIsRedacteur(false)
-    }
-  }, [])
-
+  const { isLoggedIn, isRedacteur } = useAuth()
   return { isLoggedIn, isRedacteur }
 }

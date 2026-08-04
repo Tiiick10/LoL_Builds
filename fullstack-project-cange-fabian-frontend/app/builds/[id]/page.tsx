@@ -2,95 +2,49 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import API from "@/utils/axios";
+import Link from "next/link";
+import { useAuth } from "@/providers/AuthProvider";
+import type { Build } from "@/types";
 import {
   BsHandThumbsUpFill,
   BsHandThumbsDownFill,
   BsFillHouseDoorFill,
-<<<<<<< HEAD
 } from "react-icons/bs";
 import { PiKeyReturnLight } from "react-icons/pi";
-import Link from "next/link";
-import { jwtDecode } from "jwt-decode";
-=======
-} from "react-icons/bs"
-import { PiKeyReturnLight } from "react-icons/pi"
-import Link from "next/link"
-import { jwtDecode } from "jwt-decode"
-import DOMPurify from "dompurify"
->>>>>>> 05df37e632a9452efae1fa80e89035b7411b2574
 
-interface User {
-  username: string;
-}
+const sanitizeHtml = (value: string) => {
+  if (typeof window === "undefined") return value;
 
-interface Champion {
-  name: string;
-  image_url: string;
-}
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(value, "text/html");
 
-interface Avis {
-  author: User;
-  date_poste: string;
-  positif: boolean;
-  commentaire: string;
-  banned: boolean;
-}
+  doc.querySelectorAll("script, style, iframe, object, embed, link, svg, math").forEach((element) => {
+    element.remove();
+  });
 
-interface Build {
-  id: number;
-  name: string;
-  role: string;
-  description: string;
-  author: User;
-  champion: Champion;
-  primary_path: string;
-  primary_path_icon_url: string;
-  keystone: string;
-  keystone_icon_url: string;
-  primary_slot1: string;
-  primary_slot1_icon_url: string;
-  primary_slot2: string;
-  primary_slot2_icon_url: string;
-  primary_slot3: string;
-  primary_slot3_icon_url: string;
-  secondary_path: string;
-  secondary_path_icon_url: string;
-  secondary_slot1: string;
-  secondary_slot1_icon_url: string;
-  secondary_slot2: string;
-  secondary_slot2_icon_url: string;
-  shard_offense: string;
-  shard_offense_icon_url: string;
-  shard_flex: string;
-  shard_flex_icon_url: string;
-  shard_defense: string;
-  shard_defense_icon_url: string;
-  avis: Avis[];
-  is_public: boolean;
-}
+  doc.querySelectorAll("*").forEach((element) => {
+    Array.from(element.attributes).forEach((attr) => {
+      if (attr.name.startsWith("on")) {
+        element.removeAttribute(attr.name);
+      }
+    });
+  });
+
+  return doc.body.innerHTML;
+};
 
 export default function BuildDetailPage() {
-<<<<<<< HEAD
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const { username, isSuperuser } = useAuth();
+
   const [build, setBuild] = useState<Build | null>(null);
   const [newComment, setNewComment] = useState("");
   const [isPositive, setIsPositive] = useState(true);
   const [submitMessage, setSubmitMessage] = useState("");
   const [isAuthor, setIsAuthor] = useState(false);
-  const [isSuperuser, setIsSuperuser] = useState(false);
   const [editedBuild, setEditedBuild] = useState<Partial<Build>>({});
-  const [isEditing, setIsEditing] = useState(false);
-=======
-  const params = useParams()
-  const id = Array.isArray(params?.id) ? params.id[0] : params?.id
-  const [build, setBuild] = useState<Build | null>(null)
-  const [newComment, setNewComment] = useState("")
-  const [isPositive, setIsPositive] = useState(true)
-  const [submitMessage, setSubmitMessage] = useState("")
-  const [isAuthor, setIsAuthor] = useState(false)
-  const [editedBuild, setEditedBuild] = useState<Partial<Build>>({})
->>>>>>> 05df37e632a9452efae1fa80e89035b7411b2574
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const fallback = (name: string) =>
     `/images/custom-runes/${name
@@ -103,47 +57,15 @@ export default function BuildDetailPage() {
       const res = await API.get(`builds/${id}/`);
       setBuild(res.data);
       setEditedBuild(res.data);
+      setIsAuthor(Boolean(username && (res.data.author?.username === username || isSuperuser)));
     } catch (err) {
       console.error("Error loading build:", err);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await API.get(`builds/${id}/`);
-        setBuild(res.data);
-        setEditedBuild(res.data);
-
-        const token = localStorage.getItem("access");
-        if (token) {
-<<<<<<< HEAD
-          const decoded: any = jwtDecode(token);
-          console.log("Token decoded:", decoded);
-
-          const currentUser = localStorage.getItem("username");
-          const isAdmin = decoded.is_superuser;
-          console.log("Current user:", currentUser);
-          console.log("Is admin:", isAdmin);
-          setIsSuperuser(isAdmin);
-=======
-          const decoded: any = jwtDecode(token)
-
-          const currentUser = localStorage.getItem("username")
-          const isAdmin = decoded.is_superuser
->>>>>>> 05df37e632a9452efae1fa80e89035b7411b2574
-
-          if (res.data.author?.username === currentUser || isAdmin) {
-            setIsAuthor(true);
-          }
-        }
-      } catch (err) {
-        console.error("Error loading build:", err);
-      }
-    };
-
-    if (id) fetchData();
-  }, [id]);
+    if (id) fetchBuild();
+  }, [id, username, isSuperuser]);
 
   const handleUpdateBuild = async () => {
     try {
@@ -164,18 +86,13 @@ export default function BuildDetailPage() {
           shard_offense: editedBuild.shard_offense,
           shard_flex: editedBuild.shard_flex,
           shard_defense: editedBuild.shard_defense,
-        },
-
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
         }
       );
-      alert("Build updated!");
+      setSubmitMessage("Build updated!");
       fetchBuild();
     } catch (err) {
       console.error("Update failed:", err);
+      setSubmitMessage("Error while updating build.");
     }
   };
 
@@ -187,11 +104,6 @@ export default function BuildDetailPage() {
         {
           commentaire: newComment,
           positif: isPositive,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
         }
       );
       setSubmitMessage("Comment sent !");
@@ -200,6 +112,28 @@ export default function BuildDetailPage() {
     } catch (err) {
       console.error(err);
       setSubmitMessage("Error while sending comment.");
+    }
+  };
+
+  const handleToggleVisibility = async () => {
+    if (!build) return;
+    try {
+      await API.patch(`/builds/${build.id}/toggle_visibility/`, {});
+      fetchBuild();
+    } catch (err) {
+      console.error("Toggle visibility failed:", err);
+      setSubmitMessage("Error while changing visibility.");
+    }
+  };
+
+  const handleDeleteBuild = async () => {
+    if (!build) return;
+    try {
+      await API.delete(`/builds/${build.id}/`);
+      window.location.href = "/builds";
+    } catch (err) {
+      console.error("Error deleting build:", err);
+      setSubmitMessage("Error while deleting build.");
     }
   };
 
@@ -223,6 +157,12 @@ export default function BuildDetailPage() {
           Return
         </Link>
       </div>
+
+      {submitMessage && (
+        <div className="text-center p-3 rounded-lg bg-indigo-600/20 border border-indigo-500 text-indigo-200">
+          {submitMessage}
+        </div>
+      )}
 
       {isAuthor ? (
         <div className="space-y-4">
@@ -265,24 +205,9 @@ export default function BuildDetailPage() {
       )}
 
       {isAuthor && (
-        <div className="flex gap-4 justify-center mt-4">
+        <div className="flex gap-4 justify-center mt-4 items-center">
           <button
-            onClick={async () => {
-              try {
-                await API.patch(
-                  `/builds/${build.id}/toggle_visibility/`,
-                  {},
-                  {
-                    headers: {
-                      Authorization: `Bearer ${localStorage.getItem("access")}`,
-                    },
-                  }
-                );
-                fetchBuild();
-              } catch (err) {
-                console.error("Toggle visibility failed:", err);
-              }
-            }}
+            onClick={handleToggleVisibility}
             className={`px-4 py-2 rounded text-white ${
               build.is_public
                 ? "bg-green-600 hover:bg-green-700"
@@ -299,25 +224,30 @@ export default function BuildDetailPage() {
             Save Changes
           </button>
 
-          <button
-            onClick={async () => {
-              if (confirm("Are you sure you want to delete this build?")) {
-                try {
-                  await API.delete(`/builds/${build.id}/`, {
-                    headers: {
-                      Authorization: `Bearer ${localStorage.getItem("access")}`,
-                    },
-                  });
-                  window.location.href = "/builds";
-                } catch (err) {
-                  console.error("Error deleting build:", err);
-                }
-              }
-            }}
-            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
-          >
-            Delete Build
-          </button>
+          {isConfirmingDelete ? (
+            <span className="flex items-center gap-2">
+              <span className="text-sm text-gray-300">Are you sure?</span>
+              <button
+                onClick={handleDeleteBuild}
+                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
+              >
+                Yes, delete
+              </button>
+              <button
+                onClick={() => setIsConfirmingDelete(false)}
+                className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded text-white"
+              >
+                Cancel
+              </button>
+            </span>
+          ) : (
+            <button
+              onClick={() => setIsConfirmingDelete(true)}
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
+            >
+              Delete Build
+            </button>
+          )}
         </div>
       )}
 
@@ -345,7 +275,7 @@ export default function BuildDetailPage() {
         <div
           className="prose prose-invert max-w-none text-white"
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(build.description || ""),
+            __html: sanitizeHtml(build.description || ""),
           }}
         />
       </section>
@@ -523,3 +453,4 @@ export default function BuildDetailPage() {
     </main>
   );
 }
+

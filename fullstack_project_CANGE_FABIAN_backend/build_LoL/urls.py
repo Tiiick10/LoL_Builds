@@ -28,9 +28,10 @@ from .views import (
 
     # Auth
     register_user,
-
-    # Token Expiration
     custom_login_view,
+    cookie_token_refresh_view,
+    logout_view,
+    auth_status_view,
     CustomTokenObtainPairView,
 
     # User
@@ -77,7 +78,12 @@ urlpatterns = [
 
     path('custom-login/', custom_login_view, name='custom-login'),
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/refresh/', cookie_token_refresh_view, name='token_refresh'),
+
+    # Auth state (cookie-based)
+
+    path('logout/', logout_view, name='logout'),
+    path('auth/status/', auth_status_view, name='auth-status'),
 
     path("users/<int:id>/", UserDetailView.as_view(), name="user-detail"),
 

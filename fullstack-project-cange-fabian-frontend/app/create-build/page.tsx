@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import API from "@/utils/axios"
+import type { BuildForm, ChampionSuggestion, RunePath, Rune } from "@/types"
 
 const ROLES = ["top", "jungle", "mid", "adc", "support"]
 
@@ -26,7 +27,7 @@ const SHARD_ROW_3 = [
 ]
 
 export default function CreateBuildPage() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<BuildForm>({
     name: "",
     description: "",
     role: "",
@@ -46,30 +47,47 @@ export default function CreateBuildPage() {
 
   const [error, setError] = useState("")
   const [message, setMessage] = useState("")
-  const [champions, setChampions] = useState<any[]>([])
-  const [filteredChampions, setFilteredChampions] = useState<any[]>([])
+  const [champions, setChampions] = useState<ChampionSuggestion[]>([])
+  const [filteredChampions, setFilteredChampions] = useState<ChampionSuggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const [runes, setRunes] = useState<any[]>([])
+  const [runes, setRunes] = useState<RunePath[]>([])
 
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const token = localStorage.getItem("access")
-    if (!token) return setError("Not authenticated.")
+    setError("")
+
+    // Client-side validation before hitting the API
+    if (!form.name.trim()) return setError("Please enter a build name.")
+    if (!form.role) return setError("Please select a role.")
     if (!form.champion_name) return setError("Please select a champion.")
+    if (!form.primary_path) return setError("Please select a primary path.")
+    if (!form.keystone) return setError("Please select a keystone rune.")
+    if (!form.secondary_path) return setError("Please select a secondary path.")
 
     try {
       await API.post("builds/create/", form)
       setMessage("Build created successfully!")
       setTimeout(() => router.push("/builds"), 1500)
     } catch (err: any) {
-      if (err.response) {
-        console.error("API Error:", err.response.data)
-        setError(`Erreur API : ${JSON.stringify(err.response.data)}`)
+      console.error(err)
+      if (err.response?.data) {
+        const data = err.response.data
+        // Extract human-readable field errors if the API returns them
+        if (typeof data === "string") {
+          setError(data)
+        } else if (data.detail) {
+          setError(data.detail)
+        } else if (data.error) {
+          setError(data.error)
+        } else if (data.champion) {
+          setError(Array.isArray(data.champion) ? data.champion[0] : data.champion)
+        } else {
+          setError("Failed to create the build. Please check the form and try again.")
+        }
       } else {
-        setError("Unknown error")
-        console.error(err)
+        setError("Network error. Please check your connection and try again.")
       }
     }
   }
@@ -215,8 +233,8 @@ export default function CreateBuildPage() {
             }
             className="w-full p-2 bg-gray-800 rounded"
           >
-            <option value="">Select Keystone</option>
-            {primary.slots[0]?.runes.map((rune: any) => (
+<option value="">Select Keystone</option>
+            {primary.slots[0]?.runes.map((rune: Rune) => (
               <option key={rune.id} value={rune.name}>
                 {rune.name}
               </option>
@@ -227,7 +245,7 @@ export default function CreateBuildPage() {
         {/* Minor Primary Runes */}
         {primary && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            {primary.slots.slice(1).map((slot: any, idx: number) => {
+            {primary.slots.slice(1).map((slot, idx: number) => {
               const field = `primary_slot${idx + 1}` as keyof typeof form
               return (
                 <select
@@ -242,7 +260,7 @@ export default function CreateBuildPage() {
                   className="p-2 bg-gray-800 rounded"
                 >
                   <option value="">{`Primary Slot ${idx + 1}`}</option>
-                  {slot.runes.map((rune: any) => (
+                  {slot.runes.map((rune: Rune) => (
                     <option key={rune.id} value={rune.name}>
                       {rune.name}
                     </option>
@@ -284,10 +302,10 @@ export default function CreateBuildPage() {
             }` as keyof typeof form
             const selectedOther = form[otherKey]
 
-            const options = secondary?.slots
+const options = secondary?.slots
               .slice(1)
-              .flatMap((slot: any) => slot.runes)
-              .filter((rune: any) => rune.name !== selectedOther)
+              .flatMap((slot) => slot.runes)
+              .filter((rune) => rune.name !== selectedOther)
 
             return (
               <select
@@ -302,7 +320,7 @@ export default function CreateBuildPage() {
                 className="p-2 bg-gray-800 rounded"
               >
                 <option value="">{`Secondary Slot ${idx}`}</option>
-                {options?.map((rune: any) => (
+                {options?.map((rune: Rune) => (
                   <option key={rune.id} value={rune.name}>
                     {rune.name}
                   </option>

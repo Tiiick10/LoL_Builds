@@ -4,23 +4,34 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import useAuthState from '@/utils/useAuthState'
+import API from '@/utils/axios'
+import { useAuth } from '@/providers/AuthProvider'
 
-export default function Header() {
-  const { isLoggedIn, isRedacteur } = useAuthState()
+interface HeaderProps {
+  /** When true, the header is positioned absolutely over a hero/video section. */
+  overlay?: boolean
+}
+
+export default function Header({ overlay = false }: HeaderProps) {
+  const { isLoggedIn, isRedacteur, logout } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const router = useRouter()
 
-  const handleLogout = () => {
-    localStorage.removeItem('access')
-    localStorage.removeItem('refresh')
+  const handleLogout = async () => {
+    // Clear the httpOnly cookies on the backend
+    try {
+      await API.post('logout/')
+    } catch {
+      // Ignore - still clear local state below
+    }
+    logout()
     router.push('/')
   }
 
   return (
-    <header className="z-30 mt-2 w-full md:mt-5">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="relative flex h-14 items-center justify-between gap-3 rounded-2xl bg-gray-900/90 px-3 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] after:absolute after:inset-0 after:-z-10 after:backdrop-blur-xs">
+    <header className={`${overlay ? 'absolute top-0 left-0 w-full z-30' : 'z-30 mt-2 w-full md:mt-5'}`}>
+      <div className={`mx-auto max-w-6xl px-4 sm:px-6 ${overlay ? '' : ''}`}>
+        <div className={`relative flex h-14 items-center justify-between gap-3 rounded-2xl px-3 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,var(--color-gray-800),var(--color-gray-700),var(--color-gray-800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] after:absolute after:inset-0 after:-z-10 after:backdrop-blur-xs ${overlay ? 'bg-transparent' : 'bg-gray-900/90'}`}>
 
           {/* Logo / Home */}
 

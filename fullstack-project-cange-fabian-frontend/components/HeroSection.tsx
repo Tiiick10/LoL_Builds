@@ -1,19 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import useAuthState from "@/utils/useAuthState"
+import Header from "@/components/ui/header"
 
 export default function HeroSection() {
-  const { isLoggedIn, isRedacteur } = useAuthState()
-  const [menuOpen, setMenuOpen] = useState(false)
   const [showTopButton, setShowTopButton] = useState(false)
-  const router = useRouter()
-
-
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,12 +14,6 @@ export default function HeroSection() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  const handleLogout = () => {
-    localStorage.removeItem("access")
-    localStorage.removeItem("refresh")
-    router.push("/")
-  }
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
@@ -51,146 +37,9 @@ export default function HeroSection() {
 
       <div className="absolute inset-0 bg-black/60 z-0" />
 
-      {/* Navbar */}
+      {/* Header overlay (reuses the shared Header component) */}
 
-      <div
-        className="sticky top-0 z-30 h-25 px-8 flex justify-between items-center backdrop-blur-md"
-        style={{ backgroundColor: "rgba(79, 57, 246, 0.1)" }}
-      >
-        <div className="absolute -top-4 left-8">
-          <Link href="/">
-            <Image src="/images/logo.svg" width={100} height={100} alt="Logo" />
-          </Link>
-        </div>
-
-        {/* Desktop nav */}
-        <ul className="hidden md:flex items-center justify-end gap-3 pl-28 w-full">
-          {isLoggedIn ? (
-            <>
-              <li>
-                <Link
-                  href="/create-build"
-                  className="bg-green-600 hover:bg-green-700 py-2 px-4 rounded text-sm text-white"
-                >
-                  Create Build
-                </Link>
-              </li>
-              {isRedacteur && (
-                <li>
-                  <Link
-                    href="/articles/create"
-                    className="bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded text-sm text-white"
-                  >
-                    Create Article
-                  </Link>
-                </li>
-              )}
-              <li>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700 py-1.5 px-4 rounded text-sm text-white"
-                >
-                  Logout
-                </button>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <Link
-                  href="/login"
-                  className="bg-gray-700 hover:bg-gray-600 py-2 px-4 rounded text-sm text-white"
-                >
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/register"
-                  className="bg-indigo-600 hover:bg-indigo-700 py-2 px-4 rounded text-sm text-white"
-                >
-                  Register
-                </Link>
-              </li>
-            </>
-          )}
-        </ul>
-
-        {/* Mobile burger button */}
-
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="text-white md:hidden z-40"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
-
-        {/* Mobile menu */}
-
-        {menuOpen && (
-          <div className="absolute top-16 right-4 bg-black/90 rounded-lg p-4 flex flex-col gap-2 w-[170px] z-50 md:hidden">
-            {isLoggedIn ? (
-              <>
-                <Link
-                  href="/create-build"
-                  onClick={() => setMenuOpen(false)}
-                  className="bg-green-600 hover:bg-green-700 text-white text-sm text-center px-4 py-2 rounded transition"
-                >
-                  Create Build
-                </Link>
-                {isRedacteur && (
-                  <Link
-                    href="/articles/create"
-                    onClick={() => setMenuOpen(false)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white text-sm text-center px-4 py-2 rounded transition"
-                  >
-                    Create Article
-                  </Link>
-                )}
-                <button
-                  onClick={() => {
-                    handleLogout()
-                    setMenuOpen(false)
-                  }}
-                  className="bg-red-600 hover:bg-red-700 text-white text-sm text-center px-4 py-2 rounded transition"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  onClick={() => setMenuOpen(false)}
-                  className="bg-gray-700 hover:bg-gray-600 text-white text-sm text-center px-4 py-2 rounded transition"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={() => setMenuOpen(false)}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm text-center px-4 py-2 rounded transition"
-                >
-                  Register
-                </Link>
-              </>
-            )}
-          </div>
-        )}
-      </div>
+      <Header overlay />
 
       {/* Hero Content */}
 
@@ -232,3 +81,4 @@ export default function HeroSection() {
     </section>
   )
 }
+

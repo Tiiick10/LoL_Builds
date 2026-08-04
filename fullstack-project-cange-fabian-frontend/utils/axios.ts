@@ -4,15 +4,16 @@ const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/'
 
 const API = axios.create({
   baseURL,
+  // Tokens are stored in httpOnly cookies by the backend.
+  // This sends the cookies with every request.
+  withCredentials: true,
 })
 
 // Interceptor to attach token to every request
+// Tokens are now in httpOnly cookies, so no manual Authorization header is needed.
 
 API.interceptors.request.use(config => {
-  const token = localStorage.getItem('access')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
+  // No manual Authorization header needed - cookies handle auth.
   return config
 })
 
@@ -28,28 +29,33 @@ API.interceptors.response.use(
     }
 
     originalRequest._retry = true
-    const refresh = localStorage.getItem('refresh')
-
-    if (!refresh) {
-      localStorage.removeItem('access')
-      return Promise.reject(error)
-    }
 
     try {
-      const response = await axios.post(`${baseURL}token/refresh/`, { refresh })
+      // The refresh endpoint reads the refresh token from the httpOnly cookie.
+      // It sets a new access token cookie and returns the refreshed user metadata.
+      const response = await axios.post(`${baseURL}token/refresh/`, {}, { withCredentials: true })
       const newAccessToken = response.data?.access
 
       if (!newAccessToken) {
         throw new Error('Missing access token in refresh response')
       }
 
-      localStorage.setItem('access', newAccessToken)
-      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+      // Note: we do NOT store the token in localStorage (it's an httpOnly cookie).
+      // The AuthProvider will re-sync user metadata from the refresh response.
+      if (response.data?.username || response.data?.role) {
+        if (response.data.username) localStorage.setItem('username', response.data.username)
+        if (response.data.role) localStorage.setItem('role', response.data.role)
+        localStorage.setItem('is_superuser', String(response.data.is_superuser ?? false))
+      }
 
       return API(originalRequest)
     } catch (refreshError) {
+      // Clean up local metadata on refresh failure
       localStorage.removeItem('access')
       localStorage.removeItem('refresh')
+      localStorage.removeItem('username')
+      localStorage.removeItem('role')
+      localStorage.removeItem('is_superuser')
       return Promise.reject(refreshError)
     }
   }

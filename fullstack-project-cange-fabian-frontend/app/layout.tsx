@@ -1,7 +1,9 @@
+// @ts-ignore
 import "./css/style.css"
 import { Inter } from "next/font/google"
 import localFont from "next/font/local"
 import ClientLayout from "@/components/ClientLayout"
+import { AuthProvider } from "@/providers/AuthProvider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,8 +30,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${nacelle.variable} bg-gray-950 font-inter text-base text-gray-200 antialiased`}>
-        <ClientLayout>{children}</ClientLayout>
+<body className={`${inter.variable} ${nacelle.variable} bg-gray-950 font-inter text-base text-gray-200 antialiased`}>
+        <AuthProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </AuthProvider>
       </body>
     </html>
   )

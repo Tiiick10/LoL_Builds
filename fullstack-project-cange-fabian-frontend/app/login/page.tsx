@@ -2,31 +2,34 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import API from '@/utils/axios'
+import { useAuth } from '@/providers/AuthProvider'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { login } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
     try {
       const res = await API.post('custom-login/', {
         username,
         password
       })
 
-      localStorage.setItem('access', res.data.access)
-      localStorage.setItem('refresh', res.data.refresh)
-      localStorage.setItem('is_superuser', res.data.is_superuser)
-      localStorage.setItem('role', res.data.role)
-      localStorage.setItem('username', res.data.username)
+      // Tokens are stored in httpOnly cookies by the backend.
+      // Only user metadata is returned in the JSON body.
+      login({
+        username: res.data.username,
+        role: res.data.role,
+        is_superuser: res.data.is_superuser,
+      })
 
+      // No forced reload needed - the AuthContext is reactive.
       router.push('/')
-      setTimeout(() => {
-        window.location.reload()
-      }, 120)
     } catch (err) {
       setError("Invalid credentials")
     }

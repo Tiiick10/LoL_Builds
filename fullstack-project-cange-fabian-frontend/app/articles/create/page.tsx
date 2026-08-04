@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import API from '@/utils/axios'
+import { useAuth } from '@/providers/AuthProvider'
 
 export default function CreateArticlePage() {
+  const { isLoggedIn } = useAuth()
   const [form, setForm] = useState({
     titre: '',
     image_banner: '',
@@ -21,19 +23,25 @@ export default function CreateArticlePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const token = localStorage.getItem('access')
-    if (!token) return setError('You must be logged in.')
+    if (!isLoggedIn) return setError('You must be logged in.')
 
     try {
-      await API.post('articles/', form, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      // Auth is handled via httpOnly cookies - no manual Authorization header needed.
+      await API.post('articles/', form)
       setMessage('Article created successfully!')
       setTimeout(() => router.push('/articles'), 1500)
-    } catch (err: any) {
-      setError('Erreur : ' + JSON.stringify(err.response?.data || {}))
+} catch (err: any) {
+      console.error(err)
+      const data = err.response?.data
+      if (typeof data === 'string') {
+        setError(data)
+      } else if (data?.detail) {
+        setError(data.detail)
+      } else if (data?.error) {
+        setError(data.error)
+      } else {
+        setError('Failed to create the article. Please check the form and try again.')
+      }
     }
   }
 

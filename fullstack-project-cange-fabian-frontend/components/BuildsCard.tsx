@@ -3,28 +3,7 @@
 import React from "react"
 import { useRouter } from 'next/navigation'
 import { motion } from "framer-motion"
-
-interface Build {
-  id: number
-  name: string
-  champion: {
-    name: string
-  }
-  primary_path: string
-  primary_path_icon_url: string
-  primary_slot1: string
-  primary_slot1_icon_url: string
-  primary_slot2: string
-  primary_slot2_icon_url: string
-  primary_slot3: string
-  primary_slot3_icon_url: string
-  secondary_path: string
-  secondary_path_icon_url: string
-  secondary_slot1: string
-  secondary_slot1_icon_url: string
-  secondary_slot2: string
-  secondary_slot2_icon_url: string
-}
+import type { Build } from "@/types"
 
 interface Props {
   build: Build
