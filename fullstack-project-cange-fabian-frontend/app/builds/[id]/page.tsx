@@ -6,10 +6,18 @@ import {
   BsHandThumbsUpFill,
   BsHandThumbsDownFill,
   BsFillHouseDoorFill,
+<<<<<<< HEAD
 } from "react-icons/bs";
 import { PiKeyReturnLight } from "react-icons/pi";
 import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
+=======
+} from "react-icons/bs"
+import { PiKeyReturnLight } from "react-icons/pi"
+import Link from "next/link"
+import { jwtDecode } from "jwt-decode"
+import DOMPurify from "dompurify"
+>>>>>>> 05df37e632a9452efae1fa80e89035b7411b2574
 
 interface User {
   username: string;
@@ -62,6 +70,7 @@ interface Build {
 }
 
 export default function BuildDetailPage() {
+<<<<<<< HEAD
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const [build, setBuild] = useState<Build | null>(null);
@@ -72,6 +81,16 @@ export default function BuildDetailPage() {
   const [isSuperuser, setIsSuperuser] = useState(false);
   const [editedBuild, setEditedBuild] = useState<Partial<Build>>({});
   const [isEditing, setIsEditing] = useState(false);
+=======
+  const params = useParams()
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id
+  const [build, setBuild] = useState<Build | null>(null)
+  const [newComment, setNewComment] = useState("")
+  const [isPositive, setIsPositive] = useState(true)
+  const [submitMessage, setSubmitMessage] = useState("")
+  const [isAuthor, setIsAuthor] = useState(false)
+  const [editedBuild, setEditedBuild] = useState<Partial<Build>>({})
+>>>>>>> 05df37e632a9452efae1fa80e89035b7411b2574
 
   const fallback = (name: string) =>
     `/images/custom-runes/${name
@@ -98,6 +117,7 @@ export default function BuildDetailPage() {
 
         const token = localStorage.getItem("access");
         if (token) {
+<<<<<<< HEAD
           const decoded: any = jwtDecode(token);
           console.log("Token decoded:", decoded);
 
@@ -106,6 +126,12 @@ export default function BuildDetailPage() {
           console.log("Current user:", currentUser);
           console.log("Is admin:", isAdmin);
           setIsSuperuser(isAdmin);
+=======
+          const decoded: any = jwtDecode(token)
+
+          const currentUser = localStorage.getItem("username")
+          const isAdmin = decoded.is_superuser
+>>>>>>> 05df37e632a9452efae1fa80e89035b7411b2574
 
           if (res.data.author?.username === currentUser || isAdmin) {
             setIsAuthor(true);
@@ -318,7 +344,9 @@ export default function BuildDetailPage() {
         <h2 className="text-3xl font-semibold mb-4">Build Description</h2>
         <div
           className="prose prose-invert max-w-none text-white"
-          dangerouslySetInnerHTML={{ __html: build.description }}
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(build.description || ""),
+          }}
         />
       </section>
 
