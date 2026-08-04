@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react'
 import API from '@/utils/axios'
 import ArticleCard from '@/components/ArticleCard'
-import { jwtDecode } from 'jwt-decode'
 import Link from 'next/link'
+import useAuthState from '@/utils/useAuthState'
 
 interface Article {
   id: number
@@ -12,19 +12,13 @@ interface Article {
   image_banner: string
 }
 
-interface DecodedToken {
-  username: string
-  is_superuser: boolean
-  role: string
-}
-
 const CATEGORIES = ['all', 'guide', 'news', 'patch', 'meta']
 
 export default function ArticlesPage() {
+  const { isRedacteur } = useAuthState()
   const [articles, setArticles] = useState<Article[]>([])
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [isRedacteur, setIsRedacteur] = useState(false)
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -34,18 +28,6 @@ export default function ArticlesPage() {
         setFilteredArticles(res.data)
       } catch (err) {
         console.error('Error while loading articles:', err)
-      }
-    }
-
-    const token = localStorage.getItem('access')
-    if (token) {
-      try {
-        const decoded: DecodedToken = jwtDecode(token)
-        if (decoded.role === 'Redacteur') {
-          setIsRedacteur(true)
-        }
-      } catch (err) {
-        console.error('Invalid token')
       }
     }
 
